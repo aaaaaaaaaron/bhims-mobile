@@ -146,16 +146,57 @@ export interface Section {
 
 // TODO: pipes are not they way here to filter. What we really need to do is declare our own lists in this class with what we need
 // and when we need it.
+// jk I think I like pipes now
+
+@Pipe({
+  name: 'fieldcontainersectionfilter',
+  pure: false,
+  standalone: true
+})
+export class FieldContainerSectionFilterPipe implements PipeTransform {
+  transform(items: FieldContainer[], sectionId: string): any {
+    return items.filter(item => item.section_id == sectionId)
+  }
+}
+
+@Pipe({
+  name: 'fieldcontaineraccordionfilter',
+  pure: false,
+  standalone: true
+})
+export class FieldContainerAccordionFilterPipe implements PipeTransform {
+  transform(items: FieldContainer[], accordionId: string): any {
+    return items.filter(item => item.accordion_id == accordionId)
+  }
+}
+
 @Pipe({
   name: 'fieldcontainerfilter',
   pure: false,
   standalone: true
 })
 export class FieldContainerFilterPipe implements PipeTransform {
-  transform(items: FieldContainer[], sectionId: string): any {
+  transform(items: FieldContainer[], type: string, id: string): any {
+    if (type == "Accordion"){
+      return items.filter(item => item.accordion_id == id)
+    }
+    else if (type == "Section"){
+      return items.filter(item => item.section_id == id)
+    }
+    else {
+      throw new Error("type must be 'Accordion' or 'Section'")
+    }
+  }
+}
+
+@Pipe({
+  name: 'accordionfilter',
+  pure: false,
+  standalone: true
+})
+export class AccordionFilterPipe implements PipeTransform {
+  transform(items: Accordion[], sectionId: string): any {
     return items.filter(item => item.section_id == sectionId)
-    // return items
-    // todo - add accordion filtering fc is the only one with this weird relationship.
   }
 }
 
