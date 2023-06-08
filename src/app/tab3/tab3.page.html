@@ -1,17 +1,53 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 3
+      BHIMS Report
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+<ion-content class = "background-image" [fullscreen]="true">
+  <ion-card *ngFor="let section of formService.sections" class = "section">
+    <ion-card-header>
+      <ion-card-title>{{section.section_title}}</ion-card-title>
+      <!-- This is a section, put accordions or field containers here -->
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list> <!-- a list of field containers and accordions, which are both grids -->
+
+        <ion-grid *ngFor="let fieldContainer of formService.fieldContainers | fieldcontainerfilter:section.id">
+          <!-- {{fieldContainer.display_name}} -->
+          <!-- This is a field container of id {{fieldContainer.id}} -->
+          <ion-row>
+            <ion-item *ngFor="let field of formService.fields | fieldfilter:fieldContainer.id"> <!-- todo: make this an angular component -->
+              <!-- {{field.html_input_type}} -->
+              <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}}></ion-input>
+              <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked">
+              </ion-select>
+            </ion-item>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid> <!-- accordions here -->
+        </ion-grid>
+
+      </ion-list>
+    </ion-card-content>    
+
+
+    <!-- <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let field of formService.fields">
+          {{field.display_name}}
+        </ion-item>
+      </ion-list>
+    </ion-card-content> -->
+
+  </ion-card>
 </ion-content>
+
+
+
+
