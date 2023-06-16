@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FieldContainerAccordionFilterPipe, FieldContainerFilterPipe, FieldContainerSectionFilterPipe, FieldFilterPipe, FormService } from 'src/app/services/form.service';
+import {FieldContainerFilterPipe, FieldFilterPipe, FormService } from 'src/app/services/form.service';
 import { IonicModule } from '@ionic/angular';
 import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
 
@@ -10,7 +10,7 @@ import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
   styleUrls: ['./field-container.component.scss'],
   standalone: true,
   imports: [IonicModule, FieldContainerComponent, KeyValuePipe, NgFor, NgIf,
-     FieldContainerAccordionFilterPipe, FieldContainerSectionFilterPipe, FieldFilterPipe, FieldContainerFilterPipe]
+     FieldFilterPipe, FieldContainerFilterPipe]
 })
 export class FieldContainerComponent  implements OnInit {
   @Input() sectionId!: string;

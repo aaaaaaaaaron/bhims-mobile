@@ -12,11 +12,10 @@
   <ion-card *ngFor="let section of formService.sections" class = "section">
     <ion-card-header>
       <ion-card-title>{{section.section_title}}</ion-card-title>
-      <!-- This is a section, put accordions or field containers here -->
     </ion-card-header>
 
     <ion-card-content>
-      <ion-list> <!-- a list of field containers and accordions, which are both grids -->
+      <ion-list>
 
         <app-field-container sectionId={{section.id}} type="Section"></app-field-container>
 

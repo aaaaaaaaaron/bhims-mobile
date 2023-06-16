@@ -1,8 +1,14 @@
 <ion-grid *ngFor="let fieldContainer of formService.fieldContainers | fieldcontainerfilter:type:sectionId" class = fieldContainer>
   <ion-row>
     <ion-item *ngFor="let field of formService.fields | fieldfilter:fieldContainer.id">
-      <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}}></ion-input>
-      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked">
+      <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" placeholder="{{field.placeholder}}"></ion-input>
+      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}">
+        <ion-select-option *ngFor="let option of formService.getSelectOptions(field.field_name, field.lookup_table)" value = {{option.value}}>
+          {{option.name}}
+        </ion-select-option>
+        <!-- <ion-select-option *ngFor="let option of formService.selectOptions.get(field.field_name + 's')" value = {{option.value}}>
+          {{option.name}}
+        </ion-select-option> -->
       </ion-select>
     </ion-item>
   </ion-row>

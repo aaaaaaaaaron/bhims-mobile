@@ -15,6 +15,43 @@ export class FormService {
   public pages: Page[];
   public sections: Section[];
 
+  public country_codes: Option[];
+  public human_group_type_codes: Option[];
+  public general_human_activity_codes: Option[];
+  public place_name_codes: Option[];
+  public backcountry_unit_codes: Option[];
+  public road_name_codes: Option[];
+  public datum_codes: Option[];
+  public location_accuracy_codes: Option[];
+  public bear_species_codes: Option[];
+  public bear_color_codes: Option[];
+  public bear_cohort_codes: Option[];
+  public boolean_response_codes: Option[];
+  public bear_injury_codes: Option[];
+  public habitat_type_codes: Option[];
+  public sex_codes: Option[];
+  public visibility_codes: Option[];
+  public initial_human_action_codes: Option[];
+  public initial_bear_action_codes: Option[];
+  public reaction_by_codes: Option[];
+  public reported_probable_cause_codes: Option[];
+  public reaction_codes: Option[];
+  public food_present_codes: Option[];
+  public structure_interaction_codes: Option[];
+  public structure_type_codes: Option[];
+  public file_type_codes: Option[];
+  public management_classification_codes: Option[];
+  public probable_cause_codes: Option[];
+  public improper_reaction_codes: Option[];
+  public management_action_codes: Option[];
+
+
+
+
+
+  public selectOptions: Map<String, Option[]>
+
+
   constructor(private formData: FormDataService) {
     //todo probably move a lot of this logic to form-data service
     this.accordions = Object.values(JSON.parse(formData.accordions))
@@ -23,7 +60,73 @@ export class FormService {
     this.pages =  Object.values(JSON.parse(formData.pages))
     this.sections = Object.values(JSON.parse(formData.sections))
 
-    console.log(typeof(this.sections))
+    this.country_codes = JSON.parse(formData.country_codes)
+    this.human_group_type_codes = JSON.parse(formData.human_group_type_codes)
+    this.general_human_activity_codes = JSON.parse(formData.general_human_activity_codes)
+    this.place_name_codes = JSON.parse(formData.place_name_codes)
+    this.backcountry_unit_codes = JSON.parse(formData.backcountry_unit_codes)
+    this.road_name_codes = JSON.parse(formData.road_name_codes)
+    this.datum_codes = JSON.parse(formData.datum_codes)
+    this.location_accuracy_codes = JSON.parse(formData.location_accuracy_codes)
+    this.bear_species_codes = JSON.parse(formData.bear_species_codes)
+    this.bear_color_codes = JSON.parse(formData.bear_color_codes)
+    this.bear_cohort_codes = JSON.parse(formData.bear_cohort_codes)
+    this.boolean_response_codes = JSON.parse(formData.boolean_response_codes)
+    this.bear_injury_codes = JSON.parse(formData.bear_injury_codes)
+    this.habitat_type_codes = JSON.parse(formData.habitat_type_codes)
+    this.sex_codes = JSON.parse(formData.sex_codes)
+    this.visibility_codes = JSON.parse(formData.visibility_codes)
+    this.initial_human_action_codes = JSON.parse(formData.initial_human_action_codes)
+    this.initial_bear_action_codes = JSON.parse(formData.initial_bear_action_codes)
+    this.reaction_by_codes = JSON.parse(formData.reaction_by_codes)
+    this.reported_probable_cause_codes = JSON.parse(formData.reported_probable_cause_codes)
+    this.reaction_codes = JSON.parse(formData.reaction_codes)
+    this.food_present_codes = JSON.parse(formData.food_present_codes)
+    this.structure_interaction_codes = JSON.parse(formData.structure_interaction_codes)
+    this.structure_type_codes = JSON.parse(formData.structure_type_codes)
+    this.file_type_codes = JSON.parse(formData.file_type_codes)
+    this.management_classification_codes = JSON.parse(formData.management_classification_codes)
+    this.probable_cause_codes = JSON.parse(formData.probable_cause_codes)
+    this.improper_reaction_codes = JSON.parse(formData.improper_reaction_codes)
+    // this.file_type_codes = JSON.parse(formData.file_type_codes)
+    this.management_action_codes = JSON.parse(formData.management_action_codes)
+
+
+
+
+
+    this.selectOptions = new Map([
+      ["country_codes", JSON.parse(formData.country_codes)],
+      ["human_group_type_codes", JSON.parse(formData.human_group_type_codes)],
+      ["general_human_activity_codes", JSON.parse(formData.general_human_activity_codes)],
+      ["place_name_codes", JSON.parse(formData.place_name_codes)],
+      ["backcountry_unit_codes", JSON.parse(formData.backcountry_unit_codes)],
+      ["road_name_codes", JSON.parse(formData.road_name_codes)],
+      ["datum_codes", JSON.parse(formData.datum_codes)],
+      ["location_accuracy_codes", JSON.parse(formData.location_accuracy_codes)],
+      ["bear_species_codes", JSON.parse(formData.bear_species_codes)],
+      ["bear_color_codes", JSON.parse(formData.bear_color_codes)],
+      ["bear_cohort_codes", JSON.parse(formData.bear_cohort_codes)],
+      ["boolean_response_codes", JSON.parse(formData.boolean_response_codes)],
+      ["bear_injury_codes", JSON.parse(formData.bear_injury_codes)],
+      ["habitat_type_codes", JSON.parse(formData.habitat_type_codes)],
+      ["sex_codes", JSON.parse(formData.sex_codes)],
+      ["visibility_codes", JSON.parse(formData.visibility_codes)],
+      ["initial_human_action_codes", JSON.parse(formData.initial_human_action_codes)],
+      ["initial_bear_action_codes", JSON.parse(formData.initial_bear_action_codes)],
+      ["reaction_by_codes", JSON.parse(formData.reaction_by_codes)],
+      ["reported_probable_cause_codes", JSON.parse(formData.reported_probable_cause_codes)],
+      ["reaction_codes", JSON.parse(formData.reaction_codes)],
+      ["food_present_codes", JSON.parse(formData.food_present_codes)],
+      ["structure_interaction_codes", JSON.parse(formData.structure_interaction_codes)],
+      ["file_type_codes", JSON.parse(formData.file_type_codes)],
+      ["management_classification_codes", JSON.parse(formData.management_classification_codes)],
+      ["probable_cause_codes", JSON.parse(formData.probable_cause_codes)],
+      ["improper_reaction_codes", JSON.parse(formData.improper_reaction_codes)],
+      ["management_action_codes", JSON.parse(formData.management_action_codes)],
+
+    ])
+
   }
 
 
@@ -37,25 +140,8 @@ export class FormService {
 
   // TODO: figure out if this one can be a function. It would probably be the easist choice 
   // but I really don't think functions should be in an *ngFor
-  public getSelectOptions(fieldName: string) {
-
-    console.log(this.formData.accordions)
-    let accordions: Accordion[] = JSON.parse(this.formData.accordions)
-    console.log(accordions)
-    console.log(accordions[1])
-    console.log(accordions[4].id)
-
-
-    // switch(fieldName) {
-    //   case "Bear Color":
-    //     return this.bearSpeciesTest
-    //     break
-    //   case "Bear Group Type":
-    //     return this.bearGroupTypesTest
-    //     break
-    // }
-
-    return
+  public getSelectOptions(name: string, lookup_table: string) {
+    return lookup_table == null ? this.selectOptions.get(name + 's') : this.selectOptions.get(lookup_table)
   }
 
 }
@@ -142,33 +228,15 @@ export interface Section {
   is_enabled: string
 }
 
+export interface Option {
+  value: string
+  name: string
+}
 
 
 // TODO: pipes are not they way here to filter. What we really need to do is declare our own lists in this class with what we need
 // and when we need it.
 // jk I think I like pipes now
-
-@Pipe({
-  name: 'fieldcontainersectionfilter',
-  pure: false,
-  standalone: true
-})
-export class FieldContainerSectionFilterPipe implements PipeTransform {
-  transform(items: FieldContainer[], sectionId: string): any {
-    return items.filter(item => item.section_id == sectionId)
-  }
-}
-
-@Pipe({
-  name: 'fieldcontaineraccordionfilter',
-  pure: false,
-  standalone: true
-})
-export class FieldContainerAccordionFilterPipe implements PipeTransform {
-  transform(items: FieldContainer[], accordionId: string): any {
-    return items.filter(item => item.accordion_id == accordionId)
-  }
-}
 
 @Pipe({
   name: 'fieldcontainerfilter',
@@ -208,25 +276,5 @@ export class AccordionFilterPipe implements PipeTransform {
 export class FieldFilterPipe implements PipeTransform {
   transform(items: Field[], fieldContainerId: string): any {
     return items.filter(item => item.field_container_id == fieldContainerId)
-    // return items
-    // todo - add accordion filtering fc is the only one with this weird relationship.
-  }
-}
-
-@Pipe({
-  name: 'objecttolist',
-  pure: false,
-  standalone: true
-})
-export class ObjectToListPipe implements PipeTransform {
-  transform(items: Object[]): any {
-    console.log("pipe start")
-    // console.log(items)
-    // console.log(Object.values(items))
-    return Object.values(items)
-
-    // items.map((item => {
-    //   console.log(item)
-    // }))
   }
 }
