@@ -18,30 +18,11 @@
       <ion-list>
 
         <app-field-container sectionId={{section.id}} type="Section"></app-field-container>
-
-        <ion-accordion-group *ngFor="let accordion of formService.accordions | accordionfilter:section.id" class = fieldContainer>
-          <ion-accordion value="first">
-            <ion-item slot="header" color="light">
-              <ion-label>First Accordion</ion-label>
-            </ion-item>
-            <div class="ion-padding" slot="content">
-              <app-field-container sectionId={{accordion.id}} type="Accordion"></app-field-container>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
+        
+        <app-accordion-container *ngFor="let accordion of formService.accordions | accordionfilter:section.id" accordionId={{accordion.id}} accordionAddButton={{accordion.add_button_label}} accordionItem="{{accordion.item_name}}"></app-accordion-container>
 
       </ion-list>
     </ion-card-content>    
-
-
-    <!-- <ion-card-content>
-      <ion-list>
-        <ion-item *ngFor="let field of formService.fields">
-          {{field.display_name}}
-        </ion-item>
-      </ion-list>
-    </ion-card-content> -->
-
   </ion-card>
 </ion-content>
 

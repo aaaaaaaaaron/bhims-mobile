@@ -6,9 +6,6 @@
         <ion-select-option *ngFor="let option of formService.getSelectOptions(field.field_name, field.lookup_table)" value = {{option.value}}>
           {{option.name}}
         </ion-select-option>
-        <!-- <ion-select-option *ngFor="let option of formService.selectOptions.get(field.field_name + 's')" value = {{option.value}}>
-          {{option.name}}
-        </ion-select-option> -->
       </ion-select>
     </ion-item>
   </ion-row>
