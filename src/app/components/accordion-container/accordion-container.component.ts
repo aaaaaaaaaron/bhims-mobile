@@ -42,10 +42,13 @@ export class AccordionContainerComponent  implements OnInit {
   ngOnInit() {}
 
   public incrementCount() {
-    this.accordionCount++
-  }
+    if (this.accordionCount < 10) {
+      this.accordionCount++
+    }  }
   public decrementCount() {
-    this.accordionCount--
+    if (this.accordionCount >= 1) {
+      this.accordionCount--
+    }
   }
 
 

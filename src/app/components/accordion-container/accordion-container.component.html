@@ -5,11 +5,11 @@
       <ion-label>{{i + 1 | readableIndex}} {{accordionItem}}</ion-label>
     </ion-item>
     <div class="ion-padding" slot="content">
-      <app-field-container sectionId={{accordionId}} type="Accordion"></app-field-container>
+      <app-field-container sectionId={{accordionId}} accordionIndex={{i}} type="Accordion"></app-field-container>
     </div>
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button (click)="incrementCount()">{{accordionAddButton}}</ion-button>
-<ion-button (click)="decrementCount()">remove last</ion-button>
+<ion-button (click)="incrementCount()" color="medium">{{accordionAddButton}}</ion-button>
+<ion-button (click)="decrementCount()" color="medium">remove last</ion-button>
 

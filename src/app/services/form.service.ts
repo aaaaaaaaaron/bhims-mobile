@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ViewChildren } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormDataService } from './form-data.service';
 
@@ -7,6 +7,8 @@ import { FormDataService } from './form-data.service';
   providedIn: 'root'
 })
 export class FormService {
+
+  // @ViewChildren('myInput') vc: any;
 
 
   public accordions: Accordion[];
@@ -46,7 +48,7 @@ export class FormService {
   public management_action_codes: Option[];
 
 
-
+  public fieldEntries: Map<String, String>
 
 
   public selectOptions: Map<String, Option[]>
@@ -91,7 +93,7 @@ export class FormService {
     // this.file_type_codes = JSON.parse(formData.file_type_codes)
     this.management_action_codes = JSON.parse(formData.management_action_codes)
 
-
+    this.fieldEntries = this.createFieldEntries()
 
 
 
@@ -142,6 +144,38 @@ export class FormService {
   // but I really don't think functions should be in an *ngFor
   public getSelectOptions(name: string, lookup_table: string) {
     return lookup_table == null ? this.selectOptions.get(name + 's') : this.selectOptions.get(lookup_table)
+  }
+
+
+  //TODO: I am trying to use ngModel. What I want to do is map the field name to a item in a js object. It should be initialized
+  // empty. This function creates that map from the fields object.
+
+  // OKay that method isn't going to work because it binds to a variable, not an object. So I can bind it to one of the
+  // vars in fields[] but it is not at all conducive to accordions. Options from here: try to make it conducive with accordions:
+  // idk how but maybe think about it. Second option: Try redoing createFieldEntries but create an interface?! Is this even possible?
+
+  // Okay new idea: create a new version of fields[] that incorporates the accordion logic. I will have to rework a lot of the
+  // accordion stuff but the motivation is so we can have variables for each accordion entry.
+  public createFieldEntries() {
+    let fieldEntries = new Map<String, String>()
+    
+    for (let field of this.fields) {
+      // console.log(field)
+      fieldEntries.set(field.field_name, '')
+    }
+
+    console.log(fieldEntries)
+    return fieldEntries;
+  }
+
+
+  public saveForm() {
+    let result = []
+
+    // let vc;
+    // console.log(this.vc)
+
+    console.log("Saving form...")
   }
 
 }
