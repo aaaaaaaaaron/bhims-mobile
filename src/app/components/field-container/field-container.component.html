@@ -1,9 +1,29 @@
-<ion-grid *ngFor="let fieldContainer of formService.fieldContainers | fieldcontainerfilter:type:sectionId" class = fieldContainer>
-  <ion-row>
-    <ion-item *ngFor="let field of formService.fields | fieldfilter:fieldContainer.id">
+<!-- This actually (used to) represents multiple field containers each of which have  -->
+
+<!-- <ion-grid *ngFor="let fieldContainer of formService.fieldContainers | fieldcontainerfilter:type:sectionId" class = fieldContainer>
+  <ion-row> -->
+    <!-- <ion-item *ngFor="let field of formService.fields | fieldfilter:fieldContainer.id"> -->
+    <!-- <ion-item *ngFor="let field of fields"> -->
+      <!-- {{field.placehold}} -->
       <!-- TODO: pass through accordion id here so we can differentiate between accordions on the change input -->
-      <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" placeholder="{{field.placeholder}}" (change)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-input>
-      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" (change)="fieldChange($event, field.field_name)" [(ngModel)]="field.value">
+      <!-- formControlName="field.field_name" -->
+      <!-- Maybe make each field container a form (reactive form's form group)!!!! Then loop over field containers to get values -->
+      <!-- <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" placeholder="{{field.placeholder}}" (change)="fieldChange($event, field.field_name)"></ion-input>
+      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" (change)="fieldChange($event, field.field_name)" formControlNamee="field.field_name">
+        <ion-select-option *ngFor="let option of formService.getSelectOptions(field.field_name, field.lookup_table)" value = {{option.value}}>
+          {{option.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item> -->
+  <!-- </ion-row>
+</ion-grid> -->
+
+<ion-grid>
+  <ion-row>
+    <ion-item *ngFor="let field of this.fields">
+      <!-- hey -->
+      <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" placeholder="{{field.placeholder}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-input>
+      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value">
         <ion-select-option *ngFor="let option of formService.getSelectOptions(field.field_name, field.lookup_table)" value = {{option.value}}>
           {{option.name}}
         </ion-select-option>

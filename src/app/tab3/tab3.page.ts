@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
-import { FormService, FieldFilterPipe, AccordionFilterPipe } from '../services/form.service';
+import { FormService, FieldFilterPipe, AccordionFilterPipe, FieldContainerFilterPipe } from '../services/form.service';
 import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import { FieldContainerComponent } from '../components/field-container/field-container.component';
 import { AccordionContainerComponent } from '../components/accordion-container/accordion-container.component';
@@ -15,7 +15,7 @@ import { AccordionContainerComponent } from '../components/accordion-container/a
   styleUrls: ['tab3.page.scss'],
   standalone: true,
   imports: [IonicModule, ExploreContainerComponent, NgFor, NgIf, FieldFilterPipe,
-     KeyValuePipe, AccordionFilterPipe, FieldContainerComponent, AccordionContainerComponent],
+     KeyValuePipe, AccordionFilterPipe, FieldContainerComponent, AccordionContainerComponent, FieldContainerFilterPipe],
 })
 export class Tab3Page implements OnInit {
 

@@ -1,5 +1,5 @@
 
-<ion-accordion-group>
+<!-- <ion-accordion-group>
   <ion-accordion *ngFor="let item of [].constructor(accordionCount); let i = index" value="{{i}}">
     <ion-item slot="header" color="light">
       <ion-label>{{i + 1 | readableIndex}} {{accordionItem}}</ion-label>
@@ -8,8 +8,20 @@
       <app-field-container sectionId={{accordionId}} accordionIndex={{i}} type="Accordion"></app-field-container>
     </div>
   </ion-accordion>
+</ion-accordion-group> -->
+
+<!-- <ion-accordion-group>
+  <ion-accordion *ngFor="let fan of [].constructor(accordionCount); let i = index" value="{{i}}">
+    <ion-item slot="header" color="light">
+      <ion-label>{{i + 1 | readableIndex}} {{accordionItem}}</ion-label>
+    </ion-item>
+    <div class="ion-padding" slot="content">
+      <app-field-container *ngFor="let fieldContainer of this.fieldContainers" sectionId={{accordionId}} type="Accordion" [fields]="formService.fieldFilter(formService.fields, fieldContainer.id)"></app-field-container>
+    </div>
+  </ion-accordion>
 </ion-accordion-group>
 
 <ion-button (click)="incrementCount()" color="medium">{{accordionAddButton}}</ion-button>
-<ion-button (click)="decrementCount()" color="medium">remove last</ion-button>
+<ion-button (click)="decrementCount()" color="medium">remove last</ion-button> -->
 
+<!-- Current problem is that the fields are still the same even though they are coming from different field containers  -->

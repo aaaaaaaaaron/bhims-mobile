@@ -11,15 +11,24 @@
 <ion-content class = "background-image" [fullscreen]="true">
   <ion-card *ngFor="let section of formService.sections" class = "section">
     <ion-card-header>
+      <!-- {{section.id}} -->
       <ion-card-title>{{section.section_title}}</ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
       <ion-list>
 
-        <app-field-container sectionId={{section.id}} type="Section"></app-field-container>
-        
-        <app-accordion-container *ngFor="let accordion of formService.accordions | accordionfilter:section.id" accordionId={{accordion.id}} accordionAddButton={{accordion.add_button_label}} accordionItem="{{accordion.item_name}}"></app-accordion-container>
+        <!-- <app-field-container sectionId={{section.id}} type="Section"></app-field-container> -->
+        <!-- <app-field-container sectionId={{section.id}} type="Section"></app-field-container> -->
+        <!-- todo remove "type"(section vs acordion) because we don't really need it anymore I don't think -->
+        <ion-grid *ngFor="let fieldContainer of formService.fieldContainers | fieldcontainerfilter:'Section':section.id" class = fieldContainer>
+          <app-field-container fieldContainerId={{fieldContainer.id}} sectionId={{section.id}} type="Section" (fieldEmitter)="formService.addFieldContainer($event, fieldContainer.id, 'null')"></app-field-container>
+          <!-- [fields]="formService.fieldFilter(formService.fields, fieldContainer.id)" this is me trying to remove weird binding -->
+        </ion-grid>
+
+        <!-- I am tempted to write this ugly first just to make sure it works. -->
+        <!-- todo figure out how to pass accordion itself through. -->
+        <app-accordion-container *ngFor="let accordion of formService.accordions | accordionfilter:section.id" [fieldContainers]="formService.fieldContainerFilter(formService.fieldContainers, 'Accordion', accordion.id)" accordionId={{accordion.id}} accordionAddButton={{accordion.add_button_label}} accordionItem={{accordion.item_name}} name=""></app-accordion-container>
 
       </ion-list>
     </ion-card-content>    

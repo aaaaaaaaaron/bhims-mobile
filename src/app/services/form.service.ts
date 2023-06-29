@@ -1,6 +1,10 @@
 import { Injectable, ViewChildren } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormDataService } from './form-data.service';
+import * as _ from 'lodash';
+// import { deepClone } from '@angular-devkit/core';
+
+
 
 
 @Injectable({
@@ -48,7 +52,8 @@ export class FormService {
   public management_action_codes: Option[];
 
 
-  public fieldEntries: Map<String, String>
+  // public fieldEntries: Map<String, String>
+  // public formattedFields: (Field|Field[])[]
 
 
   public selectOptions: Map<String, Option[]>
@@ -93,7 +98,8 @@ export class FormService {
     // this.file_type_codes = JSON.parse(formData.file_type_codes)
     this.management_action_codes = JSON.parse(formData.management_action_codes)
 
-    this.fieldEntries = this.createFieldEntries()
+    // this.fieldEntries = this.createFieldEntries()
+    // this.formattedFields = this.createFormattedFields()
 
 
 
@@ -154,8 +160,6 @@ export class FormService {
   // vars in fields[] but it is not at all conducive to accordions. Options from here: try to make it conducive with accordions:
   // idk how but maybe think about it. Second option: Try redoing createFieldEntries but create an interface?! Is this even possible?
 
-  // Okay new idea: create a new version of fields[] that incorporates the accordion logic. I will have to rework a lot of the
-  // accordion stuff but the motivation is so we can have variables for each accordion entry.
   public createFieldEntries() {
     let fieldEntries = new Map<String, String>()
     
@@ -169,13 +173,79 @@ export class FormService {
   }
 
 
+  // Okay new idea: create a new version of fields[] that incorporates the accordion logic. I will have to rework a lot of the
+  // accordion stuff but the motivation is so we can have variables for each accordion entry.
+
+  // nahh will this even work?!?! Becuase then what am I even looping over in the html? Does angular allow looping over
+  // different data types? Probably not. Maybe I could make everything a list but only expand the list for accordions.
+  // AHHHH this is so annoying.
+  // public createFormattedFields() {
+
+  //   //logic: get field container ids from accordion
+  //   // if field container in  
+  //   let formattedFields: (Field|Field[])[] = []
+
+  //   for (let field of this.fields) {
+  //     formattedFields.push(field)
+  //   }
+
+  //   console.log("a")
+  //   console.log(formattedFields)
+  //   console.log("b")
+  //   console.log(this.fieldContainers)
+  //   console.log("c")
+  //   console.log(this.accordions)
+  //   return formattedFields
+  // }
+
+
+  // Okay new plan. Use reactive forms. But first I want to try something - 
+
   public saveForm() {
     let result = []
 
     // let vc;
     // console.log(this.vc)
 
-    console.log("Saving form...")
+    console.log(this.fields)
+
+    // console.log("Saving form...")
+  }
+
+
+
+  // Rewriting the pipes as functions
+
+  public fieldFilter(items: Field[], fieldContainerId: string): Field[] {
+    // items = items.slice().filter(item => item.field_container_id == fieldContainerId)
+
+    // return deepClone(items);
+
+    // return _.cloneDeep(items)
+    
+    // return JSON.parse(JSON.stringify(items)) // deep copy is taking too long. This sucks!
+    // console.log('eeee')
+    return items.filter(item => item.field_container_id == fieldContainerId)
+  }
+
+  public fieldContainerFilter(items: FieldContainer[], type: string, id: string): any {
+    if (type == "Accordion"){
+      return items.slice().filter(item => item.accordion_id == id)
+    }
+    else if (type == "Section"){
+      return items.slice().filter(item => item.section_id == id)
+    }
+    else {
+      throw new Error("type must be 'Accordion' or 'Section'")
+    }
+  }
+
+
+  public addFieldContainer(newFields: Field[], fieldContainerId: string, accordionId: string) {
+    // Waa finally here we have some joined logic for all of the fields. This is where we can do the creation of the output.
+    // And the validation
+    console.log(fieldContainerId)
+    console.log(newFields)
   }
 
 }
@@ -223,7 +293,7 @@ export interface Field {
   display_name: string
   display_order: string
   html_id: string
-  placehold: string
+  placeholder: string
   label_text: string
   required: string
   dependent_target: string
@@ -242,6 +312,7 @@ export interface Field {
   description: string
   is_enabled_for_entry: string
   has_pii: string
+  value: string
 }
 
 export interface Page {
@@ -280,10 +351,10 @@ export interface Option {
 export class FieldContainerFilterPipe implements PipeTransform {
   transform(items: FieldContainer[], type: string, id: string): any {
     if (type == "Accordion"){
-      return items.filter(item => item.accordion_id == id)
+      return items.slice().filter(item => item.accordion_id == id)
     }
     else if (type == "Section"){
-      return items.filter(item => item.section_id == id)
+      return items.slice().filter(item => item.section_id == id)
     }
     else {
       throw new Error("type must be 'Accordion' or 'Section'")
@@ -298,7 +369,7 @@ export class FieldContainerFilterPipe implements PipeTransform {
 })
 export class AccordionFilterPipe implements PipeTransform {
   transform(items: Accordion[], sectionId: string): any {
-    return items.filter(item => item.section_id == sectionId)
+    return items.slice().filter(item => item.section_id == sectionId)
   }
 }
 
@@ -309,6 +380,6 @@ export class AccordionFilterPipe implements PipeTransform {
 })
 export class FieldFilterPipe implements PipeTransform {
   transform(items: Field[], fieldContainerId: string): any {
-    return items.filter(item => item.field_container_id == fieldContainerId)
+    return items.slice().filter(item => item.field_container_id == fieldContainerId)
   }
 }
