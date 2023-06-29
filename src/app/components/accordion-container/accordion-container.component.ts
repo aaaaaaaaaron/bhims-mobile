@@ -2,7 +2,9 @@ import { Component, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FieldContainerComponent } from '../field-container/field-container.component';
 import { IonicModule } from '@ionic/angular';
 import { NgFor } from '@angular/common';
-import { Accordion } from 'src/app/services/form.service';
+import { Accordion, FieldContainer } from 'src/app/services/form.service';
+import * as _ from 'lodash';
+
 
 @Pipe({
   name: 'readableIndex',
@@ -25,29 +27,27 @@ export class ReadableIndexPipe implements PipeTransform {
   imports: [IonicModule, FieldContainerComponent, NgFor, ReadableIndexPipe]
 })
 export class AccordionContainerComponent  implements OnInit {
-  @Input() accordionId!: string;
-  @Input() accordionAddButton!: string;
-  @Input() accordionItem!: string;
+  @ Input() accordion!: Accordion
 
-
-
-  // should accordions be just a count of the # of accordions? THen we can just use an id to get each one? Or should it be
-  // something like it stores each of the field containers. I am going to go with the first method for now
-  public accordionCount: number
-
-  constructor() {
-    this.accordionCount = 1
-   }
+  constructor() {}
 
   ngOnInit() {}
 
-  public incrementCount() {
-    if (this.accordionCount < 10) {
-      this.accordionCount++
-    }  }
+  public addItem() {
+    if (this.accordion.fans.length < 10) {
+      let toAdd = _.cloneDeep(this.accordion.fans[0])
+      for (let fieldContainer of toAdd) {
+        for (let field of fieldContainer.fields) {
+          field.value = ''
+        }
+      }
+      this.accordion.fans.push(toAdd)
+    }  
+  }
+
   public decrementCount() {
-    if (this.accordionCount >= 1) {
-      this.accordionCount--
+    if (this.accordion.fans.length > 1) {
+      this.accordion.fans.pop()
     }
   }
 

@@ -1,6 +1,5 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    
     <ion-title>
       <ion-icon [src]="icon" size="large"></ion-icon>
       BHIMS Report
@@ -8,19 +7,32 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class = "background-image" [fullscreen]="true">
+<!-- <ion-content class = "background-image" [fullscreen]="true">
   <ion-card *ngFor="let section of formService.sections" class = "section">
     <ion-card-header>
       <ion-card-title>{{section.section_title}}</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
       <ion-list>
-
         <app-field-container sectionId={{section.id}} type="Section"></app-field-container>
         
         <app-accordion-container *ngFor="let accordion of formService.accordions | accordionfilter:section.id" accordionId={{accordion.id}} accordionAddButton={{accordion.add_button_label}} accordionItem="{{accordion.item_name}}"></app-accordion-container>
+      </ion-list>
+    </ion-card-content>    
+  </ion-card>
+</ion-content> -->
 
+<ion-content class = "background-image" [fullscreen]="true">
+  <ion-card *ngFor="let section of formService.masterPage.sections" class = "section">
+    <ion-card-header>
+      <ion-card-title>{{section.section_title}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <app-field-container *ngFor="let fieldContainer of section.field_containers" [fieldContainer]="fieldContainer"></app-field-container>
+        <app-accordion-container *ngFor="let accordion of section.accordions" [accordion]="accordion"></app-accordion-container>
+        <!-- <app-field-container sectionId={{section.id}} type="Section"></app-field-container>
+        <app-accordion-container *ngFor="let accordion of formService.accordions | accordionfilter:section.id" accordionId={{accordion.id}} accordionAddButton={{accordion.add_button_label}} accordionItem="{{accordion.item_name}}"></app-accordion-container> -->
       </ion-list>
     </ion-card-content>    
   </ion-card>

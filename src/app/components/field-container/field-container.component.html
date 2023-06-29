@@ -1,9 +1,8 @@
-<ion-grid *ngFor="let fieldContainer of formService.fieldContainers | fieldcontainerfilter:type:sectionId" class = fieldContainer>
+<ion-grid class = fieldContainer>
   <ion-row>
-    <ion-item *ngFor="let field of formService.fields | fieldfilter:fieldContainer.id">
-      <!-- TODO: pass through accordion id here so we can differentiate between accordions on the change input -->
-      <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" placeholder="{{field.placeholder}}" (change)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-input>
-      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" (change)="fieldChange($event, field.field_name)" [(ngModel)]="field.value">
+    <ion-item *ngFor="let field of this.fieldContainer.fields">
+      <ion-input *ngIf="field.html_input_type!='select'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" placeholder="{{field.placeholder}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-input>
+      <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value">
         <ion-select-option *ngFor="let option of formService.getSelectOptions(field.field_name, field.lookup_table)" value = {{option.value}}>
           {{option.name}}
         </ion-select-option>

@@ -1,15 +1,13 @@
 import { Injectable, ViewChildren } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormDataService } from './form-data.service';
+import * as _ from 'lodash';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormService {
-
-  // @ViewChildren('myInput') vc: any;
-
 
   public accordions: Accordion[];
   public fieldContainers: FieldContainer[];
@@ -47,8 +45,9 @@ export class FormService {
   public improper_reaction_codes: Option[];
   public management_action_codes: Option[];
 
+  public masterPage: Page
 
-  public fieldEntries: Map<String, String>
+  // public fieldEntries: Map<String, String>
 
 
   public selectOptions: Map<String, Option[]>
@@ -93,9 +92,6 @@ export class FormService {
     // this.file_type_codes = JSON.parse(formData.file_type_codes)
     this.management_action_codes = JSON.parse(formData.management_action_codes)
 
-    this.fieldEntries = this.createFieldEntries()
-
-
 
     this.selectOptions = new Map([
       ["country_codes", JSON.parse(formData.country_codes)],
@@ -125,20 +121,52 @@ export class FormService {
       ["management_classification_codes", JSON.parse(formData.management_classification_codes)],
       ["probable_cause_codes", JSON.parse(formData.probable_cause_codes)],
       ["improper_reaction_codes", JSON.parse(formData.improper_reaction_codes)],
-      ["management_action_codes", JSON.parse(formData.management_action_codes)],
-
+      ["management_action_codes", JSON.parse(formData.management_action_codes)]
     ])
+
+
+    this.masterPage = this.initializeMasterPage()
 
   }
 
+  private initializeMasterPage(): Page {
+    console.log("initializing master page")
 
-  // TODO: Im gonna be honest I think that putting a function in the ngFor is a bad idea. But who knows!
-  // maybe a pipe is the right idea after all. I feel like I remember this from a while ago.
-  // todo - add accordion filtering fc is the only one with this weird relationship.
-  // public filterFieldContainers(fieldContainers: FieldContainer[], parentId: number) {
-  //   return fieldContainers.filter(item => item.sectionId==parentId)
-  // }
+    // no filtering required for a pages sections
+    let sections = _.cloneDeep(this.sections)
 
+    for (let section of sections) {
+      // section's field containers
+      let sections_field_containers = this.fieldContainers.filter(fieldContainer => fieldContainer.section_id == section.id)
+      section.field_containers = _.cloneDeep(sections_field_containers)
+      for (let fieldContainer of section.field_containers) {
+        let field_containers_fields = this.fields.filter(field => field.field_container_id == fieldContainer.id)
+        fieldContainer.fields = _.cloneDeep(field_containers_fields)
+      }
+
+      // section's accordions
+      let sections_accordions = this.accordions.filter(accordion => accordion.section_id == section.id)
+      section.accordions = _.cloneDeep(sections_accordions)
+      for (let accordion of section.accordions) {
+        let accordions_field_containers = this.fieldContainers.filter(fieldContainer => fieldContainer.accordion_id == accordion.id)
+        accordion.fans = [_.cloneDeep(accordions_field_containers)]
+        for (let fieldContainer of accordion.fans[0]) { // only need to access the first one
+          let field_containers_fields = this.fields.filter(field => field.field_container_id == fieldContainer.id)
+          fieldContainer.fields = _.cloneDeep(field_containers_fields)
+        }
+      }
+    }
+
+    let masterPage: Page = {
+      id: '0',
+      page_name: 'master page',
+      page_index: '0',
+      css_class: '',
+      sections: sections
+    }
+
+    return masterPage
+  }
 
   // TODO: figure out if this one can be a function. It would probably be the easist choice 
   // but I really don't think functions should be in an *ngFor
@@ -146,43 +174,13 @@ export class FormService {
     return lookup_table == null ? this.selectOptions.get(name + 's') : this.selectOptions.get(lookup_table)
   }
 
-
-  //TODO: I am trying to use ngModel. What I want to do is map the field name to a item in a js object. It should be initialized
-  // empty. This function creates that map from the fields object.
-
-  // OKay that method isn't going to work because it binds to a variable, not an object. So I can bind it to one of the
-  // vars in fields[] but it is not at all conducive to accordions. Options from here: try to make it conducive with accordions:
-  // idk how but maybe think about it. Second option: Try redoing createFieldEntries but create an interface?! Is this even possible?
-
-  // Okay new idea: create a new version of fields[] that incorporates the accordion logic. I will have to rework a lot of the
-  // accordion stuff but the motivation is so we can have variables for each accordion entry.
-  public createFieldEntries() {
-    let fieldEntries = new Map<String, String>()
-    
-    for (let field of this.fields) {
-      // console.log(field)
-      fieldEntries.set(field.field_name, '')
-    }
-
-    console.log(fieldEntries)
-    return fieldEntries;
-  }
-
-
   public saveForm() {
-    let result = []
-
-    // let vc;
-    // console.log(this.vc)
-
     console.log("Saving form...")
+    console.log(this.masterPage)
   }
 
 }
 
-
-
-// interfaces above were just for when I was doing my testing to see if it was viable.
 
 export interface Accordion {
   add_button_label: string,
@@ -202,6 +200,7 @@ export interface Accordion {
   name: string
   section_id: string
   table_name: string
+  fans: FieldContainer[][] // list of list of field containers. "fan" is top level of group of field containers
 }
 
 export interface FieldContainer {
@@ -212,6 +211,7 @@ export interface FieldContainer {
   accordion_id: string
   is_enabled: string
   description: string
+  fields: Field[]
 }
 
 export interface Field {
@@ -223,7 +223,7 @@ export interface Field {
   display_name: string
   display_order: string
   html_id: string
-  placehold: string
+  placeholder: string
   label_text: string
   required: string
   dependent_target: string
@@ -242,6 +242,7 @@ export interface Field {
   description: string
   is_enabled_for_entry: string
   has_pii: string
+  value: string
 }
 
 export interface Page {
@@ -249,6 +250,7 @@ export interface Page {
   page_name: String 
   page_index: String
   css_class: String
+  sections: Section[]
 }
 
 export interface Section {
@@ -260,55 +262,12 @@ export interface Section {
   title_css_class: string
   title_html_tag: string
   is_enabled: string
+  field_containers: FieldContainer[]
+  accordions: Accordion[]
 }
 
+// select options
 export interface Option {
   value: string
   name: string
-}
-
-
-// TODO: pipes are not they way here to filter. What we really need to do is declare our own lists in this class with what we need
-// and when we need it.
-// jk I think I like pipes now
-
-@Pipe({
-  name: 'fieldcontainerfilter',
-  pure: false,
-  standalone: true
-})
-export class FieldContainerFilterPipe implements PipeTransform {
-  transform(items: FieldContainer[], type: string, id: string): any {
-    if (type == "Accordion"){
-      return items.filter(item => item.accordion_id == id)
-    }
-    else if (type == "Section"){
-      return items.filter(item => item.section_id == id)
-    }
-    else {
-      throw new Error("type must be 'Accordion' or 'Section'")
-    }
-  }
-}
-
-@Pipe({
-  name: 'accordionfilter',
-  pure: false,
-  standalone: true
-})
-export class AccordionFilterPipe implements PipeTransform {
-  transform(items: Accordion[], sectionId: string): any {
-    return items.filter(item => item.section_id == sectionId)
-  }
-}
-
-@Pipe({
-  name: 'fieldfilter',
-  pure: false,
-  standalone: true
-})
-export class FieldFilterPipe implements PipeTransform {
-  transform(items: Field[], fieldContainerId: string): any {
-    return items.filter(item => item.field_container_id == fieldContainerId)
-  }
 }
