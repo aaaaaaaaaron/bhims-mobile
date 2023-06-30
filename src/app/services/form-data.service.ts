@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Accordion, Field, FieldContainer, Page, Section } from './form.service';
 
 
 @Injectable({
@@ -102,7 +103,41 @@ export class FormDataService {
 
   // public a = ``
 
+  // public accordions: Accordion[];
+  // public fieldContainers: FieldContainer[];
+  // public fields: Field[];
+  // public pages: Page[];
+  // public sections: Section[];
 
+  // public country_codes: Option[];
+  // public human_group_type_codes: Option[];
+  // public general_human_activity_codes: Option[];
+  // public place_name_codes: Option[];
+  // public backcountry_unit_codes: Option[];
+  // public road_name_codes: Option[];
+  // public datum_codes: Option[];
+  // public location_accuracy_codes: Option[];
+  // public bear_species_codes: Option[];
+  // public bear_color_codes: Option[];
+  // public bear_cohort_codes: Option[];
+  // public boolean_response_codes: Option[];
+  // public bear_injury_codes: Option[];
+  // public habitat_type_codes: Option[];
+  // public sex_codes: Option[];
+  // public visibility_codes: Option[];
+  // public initial_human_action_codes: Option[];
+  // public initial_bear_action_codes: Option[];
+  // public reaction_by_codes: Option[];
+  // public reported_probable_cause_codes: Option[];
+  // public reaction_codes: Option[];
+  // public food_present_codes: Option[];
+  // public structure_interaction_codes: Option[];
+  // public structure_type_codes: Option[];
+  // public file_type_codes: Option[];
+  // public management_classification_codes: Option[];
+  // public probable_cause_codes: Option[];
+  // public improper_reaction_codes: Option[];
+  // public management_action_codes: Option[];
 
 
 

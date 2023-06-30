@@ -1,17 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      Load Reports
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+<ion-content class = "background-image report" [fullscreen]="true">
+  <ion-card *ngFor="let report of reportService.reports; let i = index" class = "section">
+    <ion-card-header>
+      <ion-card-title>Report {{i+1}}</ion-card-title>
+      <ion-icon name="trash-outline" (click)="reportService.deleteReport(i)"></ion-icon>
+    </ion-card-header>
+    <ion-card-content>
+      <b>Form Number:</b> {{reportService.getFormNumber(report)}}
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+
+<ion-button (click)="reportService.addItem()" color="medium">Create new form</ion-button>
+

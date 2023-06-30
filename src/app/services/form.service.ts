@@ -2,6 +2,7 @@ import { Injectable, ViewChildren } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormDataService } from './form-data.service';
 import * as _ from 'lodash';
+import { ReportService } from './report.service';
 
 
 @Injectable({
@@ -46,9 +47,6 @@ export class FormService {
   public management_action_codes: Option[];
 
   public masterPage: Page
-
-  // public fieldEntries: Map<String, String>
-
 
   public selectOptions: Map<String, Option[]>
 
@@ -126,10 +124,12 @@ export class FormService {
 
 
     this.masterPage = this.initializeMasterPage()
+    // this.masterPage = reportService.reports[reportService.reportIndex]
+
 
   }
 
-  private initializeMasterPage(): Page {
+  public initializeMasterPage(): Page {
     console.log("initializing master page")
 
     // no filtering required for a pages sections
@@ -150,7 +150,7 @@ export class FormService {
       for (let accordion of section.accordions) {
         let accordions_field_containers = this.fieldContainers.filter(fieldContainer => fieldContainer.accordion_id == accordion.id)
         accordion.fans = [_.cloneDeep(accordions_field_containers)]
-        for (let fieldContainer of accordion.fans[0]) { // only need to access the first one
+        for (let fieldContainer of accordion.fans[0]) { // only need to access the first/ only fan
           let field_containers_fields = this.fields.filter(field => field.field_container_id == fieldContainer.id)
           fieldContainer.fields = _.cloneDeep(field_containers_fields)
         }

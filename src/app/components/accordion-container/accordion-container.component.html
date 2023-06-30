@@ -2,6 +2,7 @@
   <ion-accordion *ngFor="let fan of this.accordion.fans; let i = index" value="{{i}}">
     <ion-item slot="header" color="light">
       <ion-label>{{i + 1 | readableIndex}} {{accordion.item_name}}</ion-label>
+      <ion-icon name="trash-outline" (click)="deleteItem(i)"></ion-icon>
     </ion-item>
     <div class="ion-padding" slot="content">
       <app-field-container *ngFor="let fieldContainer of fan" [fieldContainer]="fieldContainer"></app-field-container>
@@ -10,5 +11,5 @@
 </ion-accordion-group>
 
 <ion-button (click)="addItem()" color="medium">{{accordion.add_button_label}}</ion-button>
-<ion-button (click)="decrementCount()" color="medium">remove last</ion-button>
+<!-- <ion-button (click)="decrementCount()" color="medium">remove last</ion-button> -->
 

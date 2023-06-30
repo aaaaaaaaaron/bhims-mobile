@@ -45,9 +45,11 @@ export class AccordionContainerComponent  implements OnInit {
     }  
   }
 
-  public decrementCount() {
+  public deleteItem(index: number) {
     if (this.accordion.fans.length > 1) {
-      this.accordion.fans.pop()
+      // const index: number = this.accordion.indexOf(msg);
+      this.accordion.fans.splice(index, 1)
+      // this.accordion.fans.pop()
     }
   }
 
