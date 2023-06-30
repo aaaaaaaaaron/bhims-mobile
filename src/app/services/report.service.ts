@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormService, Page } from './form.service';
+import { FormDataService } from './form-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,9 @@ export class ReportService {
   public reportIndex: number
 
   // todo: move initializeMasterPage here to get rid of circular dependency
-  constructor() {
+  constructor(public formDataService: FormDataService) {
     
-    this.reports = []
+    this.reports = [formDataService.initializeMasterPage()]
 
     this.reportIndex = 0
 
@@ -28,13 +29,23 @@ export class ReportService {
   }
 
   public addItem() {
-    
+    this.reports.push(this.formDataService.initializeMasterPage())
   }
 
+  // todo: delete logic can change the selected form sneakily. Maybe build some logic to counter that.
   public deleteReport(index: number) {
     if (this.reports.length > 1) {
       this.reports.splice(index, 1)
+      if (this.reportIndex > this.reports.length - 1) {
+        // console.log("switching reports to report: " + (this.reports.length - 1 + 1).toString())
+        this.reportIndex = this.reports.length - 1
+      }
     }
+  }
+
+  public selectReport(index: number) {
+    console.log("switching reports to report: " + (index + 1).toString())
+    this.reportIndex = index
   }
 
 

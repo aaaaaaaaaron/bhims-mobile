@@ -3,6 +3,7 @@ import {FieldContainer, FormService } from 'src/app/services/form.service';
 import { IonicModule } from '@ionic/angular';
 import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FormDataService } from 'src/app/services/form-data.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 export class FieldContainerComponent  implements OnInit {
   @Input() fieldContainer!: FieldContainer
 
-  constructor(public formService: FormService) { 
+  constructor(public formService: FormService, public formDataService: FormDataService) { 
   }
 
   ngOnInit() {}

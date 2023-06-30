@@ -7,16 +7,26 @@
 </ion-header>
 
 <ion-content class = "background-image report" [fullscreen]="true">
-  <ion-card *ngFor="let report of reportService.reports; let i = index" class = "section">
+  <ion-card *ngFor="let report of reportService.reports; let i = index" class = "section" [ngStyle]="{'background-color': (i==reportService.reportIndex) ? '#8cba98' : '#ffffff'}">
     <ion-card-header>
       <ion-card-title>Report {{i+1}}</ion-card-title>
-      <ion-icon name="trash-outline" (click)="reportService.deleteReport(i)"></ion-icon>
     </ion-card-header>
     <ion-card-content>
       <b>Form Number:</b> {{reportService.getFormNumber(report)}}
     </ion-card-content>
+    <ion-card-content>
+      <ion-button color = 'light' (click)="reportService.deleteReport(i)"><ion-icon name="trash-outline" size="large"></ion-icon></ion-button>
+      <ion-button color = 'light' (click)="reportService.selectReport(i)"><ion-icon name="arrow-forward-outline" size="large"></ion-icon></ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class = "section">
+    <ion-card-header>
+      <ion-card-title>Create new form</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button (click)="reportService.addItem()" color="medium">Create new form</ion-button>
+    </ion-card-content>
   </ion-card>
 </ion-content>
-
-<ion-button (click)="reportService.addItem()" color="medium">Create new form</ion-button>
 
