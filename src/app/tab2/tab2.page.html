@@ -13,6 +13,9 @@
     </ion-card-header>
     <ion-card-content>
       <b>Form Number:</b> {{reportService.getFormNumber(report)}}
+      <br>
+      <!-- <b>Form complete:</b> {{report.allRequiredFilled()}} -->
+      <!-- {{reportService.reportComplete(report)}} -->
     </ion-card-content>
     <ion-card-content>
       <ion-button color = 'light' (click)="reportService.deleteReport(i)"><ion-icon name="trash-outline" size="large"></ion-icon></ion-button>

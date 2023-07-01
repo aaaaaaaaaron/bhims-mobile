@@ -36,6 +36,7 @@ export interface Accordion {
   section_id: string
   table_name: string
   fans: FieldContainer[][] // list of list of field containers. "fan" is top level of group of field containers
+  allRequiredFilled(): boolean
 }
 
 export interface FieldContainer {
@@ -47,6 +48,7 @@ export interface FieldContainer {
   is_enabled: string
   description: string
   fields: Field[]
+  allRequiredFilled(): boolean
 }
 
 export interface Field {
@@ -86,6 +88,7 @@ export interface Page {
   page_index: String
   css_class: String
   sections: Section[]
+  allRequiredFilled(): boolean
 }
 
 export interface Section {
@@ -99,6 +102,7 @@ export interface Section {
   is_enabled: string
   field_containers: FieldContainer[]
   accordions: Accordion[]
+  allRequiredFilled(): boolean
 }
 
 // select options

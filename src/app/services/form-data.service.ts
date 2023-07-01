@@ -101,78 +101,12 @@ export class FormDataService {
   public pages: Page[];
   public sections: Section[];
 
-  // public country_codes: Option[];
-  // public human_group_type_codes: Option[];
-  // public general_human_activity_codes: Option[];
-  // public place_name_codes: Option[];
-  // public backcountry_unit_codes: Option[];
-  // public road_name_codes: Option[];
-  // public datum_codes: Option[];
-  // public location_accuracy_codes: Option[];
-  // public bear_species_codes: Option[];
-  // public bear_color_codes: Option[];
-  // public bear_cohort_codes: Option[];
-  // public boolean_response_codes: Option[];
-  // public bear_injury_codes: Option[];
-  // public habitat_type_codes: Option[];
-  // public sex_codes: Option[];
-  // public visibility_codes: Option[];
-  // public initial_human_action_codes: Option[];
-  // public initial_bear_action_codes: Option[];
-  // public reaction_by_codes: Option[];
-  // public reported_probable_cause_codes: Option[];
-  // public reaction_codes: Option[];
-  // public food_present_codes: Option[];
-  // public structure_interaction_codes: Option[];
-  // public structure_type_codes: Option[];
-  // public file_type_codes: Option[];
-  // public management_classification_codes: Option[];
-  // public probable_cause_codes: Option[];
-  // public improper_reaction_codes: Option[];
-  // public management_action_codes: Option[];
-
-
-
   constructor() {
     this.accordions = Object.values(JSON.parse(this.accordions_))
     this.fieldContainers =  Object.values(JSON.parse(this.fieldContainers_))
     this.fields =  Object.values(JSON.parse(this.fields_)) //"other" issue colum 3447 problem is with \ escape char. Also 51887 has a "Other w/o ending quote. Jeez.
     this.pages =  Object.values(JSON.parse(this.pages_))
     this.sections = Object.values(JSON.parse(this.sections_))
-
-    // this.country_codes = JSON.parse(this.country_codes_)
-    // this.human_group_type_codes = JSON.parse(this.human_group_type_codes_)
-    // this.general_human_activity_codes = JSON.parse(this.general_human_activity_codes_)
-    // this.place_name_codes = JSON.parse(this.place_name_codes_)
-    // this.backcountry_unit_codes = JSON.parse(this.backcountry_unit_codes_)
-    // this.road_name_codes = JSON.parse(this.road_name_codes_)
-    // this.datum_codes = JSON.parse(this.datum_codes_)
-    // this.location_accuracy_codes = JSON.parse(this.location_accuracy_codes_)
-    // this.bear_species_codes = JSON.parse(this.bear_species_codes_)
-    // this.bear_color_codes = JSON.parse(this.bear_color_codes_)
-    // this.bear_cohort_codes = JSON.parse(this.bear_cohort_codes_)
-    // this.boolean_response_codes = JSON.parse(this.boolean_response_codes_)
-    // this.bear_injury_codes = JSON.parse(this.bear_injury_codes_)
-    // this.habitat_type_codes = JSON.parse(this.habitat_type_codes_)
-    // this.sex_codes = JSON.parse(this.sex_codes_)
-    // this.visibility_codes = JSON.parse(this.visibility_codes_)
-    // this.initial_human_action_codes = JSON.parse(this.initial_human_action_codes_)
-    // this.initial_bear_action_codes = JSON.parse(this.initial_bear_action_codes_)
-    // this.reaction_by_codes = JSON.parse(this.reaction_by_codes_)
-    // this.reported_probable_cause_codes = JSON.parse(this.reported_probable_cause_codes_)
-    // this.reaction_codes = JSON.parse(this.reaction_codes_)
-    // this.food_present_codes = JSON.parse(this.food_present_codes_)
-    // this.structure_interaction_codes = JSON.parse(this.structure_interaction_codes_)
-    // this.structure_type_codes = JSON.parse(this.structure_type_codes_)
-    // this.file_type_codes = JSON.parse(this.file_type_codes_)
-    // this.management_classification_codes = JSON.parse(this.management_classification_codes_)
-    // this.probable_cause_codes = JSON.parse(this.probable_cause_codes_)
-    // this.improper_reaction_codes = JSON.parse(this.improper_reaction_codes_)
-    // // this.file_type_codes = JSON.parse(this.file_type_codes_)
-    // this.management_action_codes = JSON.parse(this.management_action_codes_)
-
-
-
 
     this.selectOptions = new Map([
       ["country_codes", JSON.parse(this.country_codes_)],
@@ -197,6 +131,7 @@ export class FormDataService {
       ["reported_probable_cause_codes", JSON.parse(this.reported_probable_cause_codes_)],
       ["reaction_codes", JSON.parse(this.reaction_codes_)],
       ["food_present_codes", JSON.parse(this.food_present_codes_)],
+      ["structure_type_codes", JSON.parse(this.structure_type_codes_)],
       ["structure_interaction_codes", JSON.parse(this.structure_interaction_codes_)],
       ["file_type_codes", JSON.parse(this.file_type_codes_)],
       ["management_classification_codes", JSON.parse(this.management_classification_codes_)],
@@ -212,45 +147,6 @@ export class FormDataService {
   // but I really don't think functions should be in an *ngFor
   public getSelectOptions(name: string, lookup_table: string) {
     return lookup_table == null ? this.selectOptions.get(name + 's') : this.selectOptions.get(lookup_table)
-  }
-
-  public initializeMasterPage(): Page {
-    console.log("initializing master page")
-
-    // no filtering required for a pages sections
-    let sections = _.cloneDeep(this.sections)
-
-    for (let section of sections) {
-      // section's field containers
-      let sections_field_containers = this.fieldContainers.filter(fieldContainer => fieldContainer.section_id == section.id)
-      section.field_containers = _.cloneDeep(sections_field_containers)
-      for (let fieldContainer of section.field_containers) {
-        let field_containers_fields = this.fields.filter(field => field.field_container_id == fieldContainer.id)
-        fieldContainer.fields = _.cloneDeep(field_containers_fields)
-      }
-
-      // section's accordions
-      let sections_accordions = this.accordions.filter(accordion => accordion.section_id == section.id)
-      section.accordions = _.cloneDeep(sections_accordions)
-      for (let accordion of section.accordions) {
-        let accordions_field_containers = this.fieldContainers.filter(fieldContainer => fieldContainer.accordion_id == accordion.id)
-        accordion.fans = [_.cloneDeep(accordions_field_containers)]
-        for (let fieldContainer of accordion.fans[0]) { // only need to access the first/ only fan
-          let field_containers_fields = this.fields.filter(field => field.field_container_id == fieldContainer.id)
-          fieldContainer.fields = _.cloneDeep(field_containers_fields)
-        }
-      }
-    }
-
-    let masterPage: Page = {
-      id: '0',
-      page_name: 'master page',
-      page_index: '0',
-      css_class: '',
-      sections: sections
-    }
-
-    return masterPage
   }
 
 }

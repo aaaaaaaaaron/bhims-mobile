@@ -31,10 +31,20 @@ export class AccordionContainerComponent  implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.accordion.allRequiredFilled = (): boolean => {
+      return this.accordion.fans.every((fan) => {
+        return fan.every((fieldContainer) => {
+          return fieldContainer.allRequiredFilled()
+        })
+      })
+    }
+
+  }
 
   public addItem() {
-    if (this.accordion.fans.length < 10) {
+    // todo add modal if can't add item
+    if (this.accordion.fans.length < 10 && this.accordion.allRequiredFilled()) {
       let toAdd = _.cloneDeep(this.accordion.fans[0])
       for (let fieldContainer of toAdd) {
         for (let field of fieldContainer.fields) {
@@ -47,9 +57,7 @@ export class AccordionContainerComponent  implements OnInit {
 
   public deleteItem(index: number) {
     if (this.accordion.fans.length > 1) {
-      // const index: number = this.accordion.indexOf(msg);
       this.accordion.fans.splice(index, 1)
-      // this.accordion.fans.pop()
     }
   }
 
