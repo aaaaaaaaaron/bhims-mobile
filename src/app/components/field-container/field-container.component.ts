@@ -20,14 +20,7 @@ export class FieldContainerComponent  implements OnInit {
   constructor(public formService: FormService, public formDataService: FormDataService) { }
   
 
-  ngOnInit() {
-    this.fieldContainer.allRequiredFilled = (): boolean => { // todo: do this w/ o arrow function and simplify logic.
-      return this.fieldContainer.fields.every((field) => {
-        return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
-
-      })
-    }
-  }
+  ngOnInit() { }
 
   public fieldChange(event: any, fieldName: string) { }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Accordion, Field, FieldContainer, Page, Section, Option } from './form.service';
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 
 
 

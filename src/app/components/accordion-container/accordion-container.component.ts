@@ -3,7 +3,7 @@ import { FieldContainerComponent } from '../field-container/field-container.comp
 import { IonicModule } from '@ionic/angular';
 import { NgFor } from '@angular/common';
 import { Accordion, FieldContainer } from 'src/app/services/form.service';
-import * as _ from 'lodash';
+const _ = require('lodash')
 
 
 @Pipe({
@@ -32,13 +32,6 @@ export class AccordionContainerComponent  implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.accordion.allRequiredFilled = (): boolean => {
-      return this.accordion.fans.every((fan) => {
-        return fan.every((fieldContainer) => {
-          return fieldContainer.allRequiredFilled()
-        })
-      })
-    }
 
   }
 

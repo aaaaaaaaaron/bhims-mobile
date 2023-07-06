@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormService, Page } from './form.service';
+import { Accordion, Field, FieldContainer, FormService, Page, Section } from './form.service';
 import { FormDataService } from './form-data.service';
-import * as _ from 'lodash';
+const _ = require('lodash')
+import { Directory, Filesystem } from '@capacitor/filesystem';
 
 
 @Injectable({
@@ -20,7 +21,6 @@ export class ReportService {
     this.reportIndex = 0
 
   }
-  
 
   public getFormNumber(page: Page) {
     let formNumber = page.sections
@@ -40,7 +40,6 @@ export class ReportService {
     if (this.reports.length > 1) {
       this.reports.splice(index, 1)
       if (this.reportIndex > this.reports.length - 1) {
-        // console.log("switching reports to report: " + (this.reports.length - 1 + 1).toString())
         this.reportIndex = this.reports.length - 1
       }
     }
@@ -55,7 +54,7 @@ export class ReportService {
     console.log("initializing master page")
 
     // no filtering required for a pages sections
-    let sections = _.cloneDeep(this.formDataService.sections)
+    let sections: Section[] = _.cloneDeep(this.formDataService.sections)
 
     for (let section of sections) {
       // section's field containers
@@ -64,6 +63,11 @@ export class ReportService {
       for (let fieldContainer of section.field_containers) {
         let field_containers_fields = this.formDataService.fields.filter(field => field.field_container_id == fieldContainer.id)
         fieldContainer.fields = _.cloneDeep(field_containers_fields)
+        fieldContainer.allRequiredFilled = () => {
+          return fieldContainer.fields.every((field: Field) => {
+            return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
+          })
+        }
       }
 
       // section's accordions
@@ -75,7 +79,26 @@ export class ReportService {
         for (let fieldContainer of accordion.fans[0]) { // only need to access the first/ only fan
           let field_containers_fields = this.formDataService.fields.filter(field => field.field_container_id == fieldContainer.id)
           fieldContainer.fields = _.cloneDeep(field_containers_fields)
+          fieldContainer.allRequiredFilled = () => {
+            return fieldContainer.fields.every((field: Field) => {
+              return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
+            })  
+          }
         }
+        accordion.allRequiredFilled = () => {
+          return accordion.fans.every((fan) => {
+            return fan.every((fieldContainer) => {
+              return fieldContainer.fields.every((field: Field) => {
+                return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
+              })            
+            })
+          })
+        }
+      }
+
+      section.allRequiredFilled = () => {
+        return section.field_containers.every((fieldContainer: FieldContainer) => fieldContainer.allRequiredFilled())
+        && section.accordions.every((accordion: Accordion) => accordion.allRequiredFilled())
       }
     }
 
@@ -85,13 +108,9 @@ export class ReportService {
       page_index: '0',
       css_class: '',
       sections: sections,
-      // allRequiredFilled: () => {
-      //   return false
-      // }
       allRequiredFilled: () => {
         return masterPage.sections.every((section) => {
-          return section.field_containers.every((fieldContainer) => fieldContainer.allRequiredFilled())
-            && section.accordions.every((accordion) => accordion.allRequiredFilled())
+          return section.allRequiredFilled()
         }
       )}
     }
@@ -103,4 +122,10 @@ export class ReportService {
     console.log(this.reports[this.reportIndex])
   }
 
+  // the idea is to make it work with the valuesToSQL method in bhims-entry.js so we need (values, tableName, timestamp)
+  // We can get timestamp when we submit the form
+  // Group each field by table name.
+  public exportReports(): string {
+    return JSON.stringify(this.reports)
+  }
 }

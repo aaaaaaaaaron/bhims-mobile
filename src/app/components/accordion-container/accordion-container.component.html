@@ -10,6 +10,5 @@
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button (click)="addItem()" color="medium">{{accordion.add_button_label}}</ion-button>
-<!-- <ion-button (click)="decrementCount()" color="medium">remove last</ion-button> -->
+<ion-button (click)="addItem()" [color]="this.accordion.allRequiredFilled() ? 'primary' : 'medium'">{{accordion.add_button_label}}</ion-button>
 

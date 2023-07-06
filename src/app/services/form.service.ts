@@ -1,7 +1,7 @@
 import { Injectable, ViewChildren } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormDataService } from './form-data.service';
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 import { ReportService } from './report.service';
 
 
