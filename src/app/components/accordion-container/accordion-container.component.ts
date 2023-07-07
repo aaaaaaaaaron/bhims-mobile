@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FieldContainerComponent } from '../field-container/field-container.component';
 import { IonicModule } from '@ionic/angular';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Accordion, FieldContainer } from 'src/app/services/form.service';
 const _ = require('lodash')
 
@@ -24,21 +24,18 @@ export class ReadableIndexPipe implements PipeTransform {
   templateUrl: './accordion-container.component.html',
   styleUrls: ['./accordion-container.component.scss'],
   standalone: true,
-  imports: [IonicModule, FieldContainerComponent, NgFor, ReadableIndexPipe]
+  imports: [IonicModule, FieldContainerComponent, NgFor, NgIf, ReadableIndexPipe]
 })
-export class AccordionContainerComponent  implements OnInit {
+export class AccordionContainerComponent {
   @ Input() accordion!: Accordion
+  @ Input() display!: boolean
 
-  constructor() {}
-
-  ngOnInit() {
-
-  }
+  constructor() { }
 
   public addItem() {
     // todo add modal if can't add item
     if (this.accordion.fans.length < 10 && this.accordion.allRequiredFilled()) {
-      let toAdd = _.cloneDeep(this.accordion.fans[0])
+      let toAdd: FieldContainer[] = _.cloneDeep(this.accordion.fans[0])
       for (let fieldContainer of toAdd) {
         for (let field of fieldContainer.fields) {
           field.value = ''

@@ -1,4 +1,4 @@
-<ion-accordion-group>
+<ion-accordion-group *ngIf="display">
   <ion-accordion *ngFor="let fan of this.accordion.fans; let i = index" value="{{i}}">
     <ion-item slot="header" color="light">
       <ion-label>{{i + 1 | readableIndex}} {{accordion.item_name}}</ion-label>
@@ -10,5 +10,5 @@
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button (click)="addItem()" [color]="this.accordion.allRequiredFilled() ? 'primary' : 'medium'">{{accordion.add_button_label}}</ion-button>
+<ion-button *ngIf="display" (click)="addItem()" [disabled]="!this.accordion.allRequiredFilled()" [color]="this.accordion.allRequiredFilled() ? 'primary' : 'medium'">{{accordion.add_button_label}}</ion-button>
 

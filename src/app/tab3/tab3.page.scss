@@ -4,23 +4,13 @@
 
 .section {
     opacity: .95;
-    width: 75%;
+    // width: 95%; // use this for mobile
+    width: 75%; // use this for mobile
     margin: auto;
     margin-bottom: 5px;
     margin-top: 5px;
-    // padding: 100px;
-    // background:rgb(193, 193, 193);
 }
 
-// .fieldContainer {
-//     background:rgb(193, 193, 193);
-// }
-
 ion-content {
-    // font-family: "Times New Roman", Times, serif;
-
-    // --ion-font-family: 'Permanent Marker', cursive !important;
     --ion-font-family: 'Comic Sans MS';
-
-
 }

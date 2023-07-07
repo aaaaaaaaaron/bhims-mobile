@@ -14,13 +14,8 @@ import { Clipboard } from '@capacitor/clipboard';
   imports: [IonicModule, ExploreContainerComponent, NgFor, NgStyle]
 })
 export class Tab2Page {
-  // @ViewChild(IonModal) modal!: IonModal;
 
   constructor(public reportService: ReportService) {}
-  
-  // cancel() {
-  //   this.modal.dismiss(null, 'cancel');
-  // }
 
   public writeToClipboard = async (toWrite: string) => {
     await Clipboard.write({
