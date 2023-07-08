@@ -137,7 +137,9 @@ export class FormDataService {
       ["management_classification_codes", JSON.parse(this.management_classification_codes_)],
       ["probable_cause_codes", JSON.parse(this.probable_cause_codes_)],
       ["improper_reaction_codes", JSON.parse(this.improper_reaction_codes_)],
-      ["management_action_codes", JSON.parse(this.management_action_codes_)]
+      ["management_action_codes", JSON.parse(this.management_action_codes_)],
+      ["reaction_codes_by_1", JSON.parse(this.reaction_codes_by_1_)],
+      ["reaction_codes_by_2", JSON.parse(this.reaction_codes_by_2_)]
     ])
   }
 
@@ -145,8 +147,15 @@ export class FormDataService {
 
   // TODO: figure out if this one can be a function. It would probably be the easist choice 
   // but I really don't think functions should be in an *ngFor
-  public getSelectOptions(name: string, lookup_table: string) {
-    return lookup_table == null ? this.selectOptions.get(name + 's') : this.selectOptions.get(lookup_table)
+  public getSelectOptions(name: string, lookup_table: string, fieldContainer: FieldContainer) {
+    if (name == 'reaction_code') {
+      const reactionBy = fieldContainer.fields.find((field)=>field.field_name=="reaction_by")?.value
+      // console.log(name + 's_by_' + reactionBy)
+      return this.selectOptions.get(name + 's_by_' + reactionBy)
+    }
+    else {
+      return lookup_table == null ? this.selectOptions.get(name + 's') : this.selectOptions.get(lookup_table)
+    }
   }
 
 }

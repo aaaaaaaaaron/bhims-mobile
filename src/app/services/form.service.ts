@@ -1,35 +1,11 @@
-import { Injectable, ViewChildren } from '@angular/core';
-import { Pipe, PipeTransform } from '@angular/core';
-import { FormDataService } from './form-data.service';
-// import * as _ from 'lodash';
-import { ReportService } from './report.service';
-
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormService {
 
-  
-  // Keeping report service in here to do some validation later
-  constructor(public reportService: ReportService) {  }
-
-  public displayAccordion(accordion: Accordion, section: Section): boolean {
-    if (accordion.dependent_target != null) {
-      let dependent_field_name = accordion.dependent_target.substring(7)
-      let dependent_field = section.field_containers.flatMap((fieldContainer) => fieldContainer.fields).find((field) => field.field_name == dependent_field_name)
-      if (dependent_field?.value == accordion.dependent_value) {
-        return true;
-      }
-      else {
-        // empty accordion (maybe reset values instead?)
-        // Will need to empty accordion on export if there is only 1 empty guy
-        accordion.fans[0].forEach((fieldContainer) => fieldContainer.fields.forEach((field) => field.value = ''))
-        return false
-      }
-    }
-    return true;
-  }
+  constructor() {  }
 
 }
 

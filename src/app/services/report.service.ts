@@ -50,6 +50,40 @@ export class ReportService {
     this.reportIndex = index
   }
 
+  public displayAccordion(accordion: Accordion, section: Section): boolean {
+    if (accordion.dependent_target != null) {
+      let dependent_field_name = accordion.dependent_target.substring(7)
+      let dependent_field = section.field_containers.flatMap((fieldContainer) => fieldContainer.fields).find((field) => field.field_name == dependent_field_name)
+      if (dependent_field?.value == accordion.dependent_value) {
+        return true;
+      }
+      else {
+        // empty accordion (maybe reset values instead?)
+        // Will need to empty accordion on export if there is only 1 empty guy
+        accordion.fans[0].forEach((fieldContainer) => fieldContainer.fields.forEach((field) => field.value = ''))
+        return false
+      }
+    }
+    return true;
+  }
+
+  // do not display if field depends on dropdown val == other
+  // clear val of "other" if user changes it away from "other"
+  public displayField(field: Field, fieldContainer: FieldContainer) {
+    if (field.dependent_target != null) {
+      let dependent_field_name = field.dependent_target.substring(7) + "_code" // have to do some shifting to get field name
+      let dependent_field = fieldContainer.fields.find((field) => field.field_name == dependent_field_name) as Field // casting this might be dumb
+      if (field.dependent_value.split(',').includes(dependent_field?.value)) {
+        return true;
+      }
+      else {
+        field.value = ''
+        return false
+      }
+    }
+    return true;
+  }
+
   public initializeMasterPage(): Page {
     console.log("initializing master page")
 
@@ -65,7 +99,7 @@ export class ReportService {
         fieldContainer.fields = _.cloneDeep(field_containers_fields)
         fieldContainer.allRequiredFilled = () => {
           return fieldContainer.fields.every((field: Field) => {
-            return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
+            return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
           })
         }
       }
@@ -81,7 +115,7 @@ export class ReportService {
           fieldContainer.fields = _.cloneDeep(field_containers_fields)
           fieldContainer.allRequiredFilled = () => {
             return fieldContainer.fields.every((field: Field) => {
-              return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
+              return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
             })  
           }
         }
@@ -89,7 +123,7 @@ export class ReportService {
           return accordion.fans.every((fan) => {
             return fan.every((fieldContainer) => {
               return fieldContainer.fields.every((field: Field) => {
-                return (field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f'
+                return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
               })            
             })
           })
@@ -117,6 +151,8 @@ export class ReportService {
 
     return masterPage
   }
+
+
 
   public logForm() {
     console.log(this.reports[this.reportIndex])

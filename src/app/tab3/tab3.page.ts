@@ -23,7 +23,9 @@ export class Tab3Page implements OnInit {
 
   icon = "/assets/images/bhims_icon_50px.svg"
   
-  constructor(public formService: FormService, public reportService: ReportService, public formDataService: FormDataService) {}
+  constructor(public formService: FormService, public reportService: ReportService, public formDataService: FormDataService) {
+    console.log(formDataService.fields)
+  }
 
   ngOnInit() {
     console.log("waaaa luigi");

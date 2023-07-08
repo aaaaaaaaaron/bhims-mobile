@@ -1,12 +1,13 @@
 <ion-grid class = fieldContainer>
   <ion-row>
     <div *ngFor="let field of this.fieldContainer.fields">
-      <ion-item *ngIf="displayField(field)">
+      <ion-item *ngIf="reportService.displayField(field, this.fieldContainer)">
         <!-- todo: use 'in' -->
-        <ion-input *ngIf="field.html_input_type=='text'||field.html_input_type=='number'||field.html_input_type=='date'||field.html_input_type=='time'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" min="{{field.html_min}}" max="{{field.html_max}}" step="{{field.html_step}}" placeholder="{{field.placeholder}}" required="{{field.required}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-input>
-        <ion-textarea *ngIf="field.html_input_type=='textarea'" rows="8" [autoGrow]="true" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" required="{{field.required}}" placeholder="{{field.placeholder}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-textarea>
-        <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" required="{{field.required}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value">
-          <ion-select-option *ngFor="let option of formDataService.getSelectOptions(field.field_name, field.lookup_table)" value = {{option.value}}>
+        <!-- <div *ngIf="field.required=='t'" color="red">*</div> -->
+        <ion-input *ngIf="field.html_input_type=='text'||field.html_input_type=='number'||field.html_input_type=='date'||field.html_input_type=='time'" label={{field.display_name}} labelPlacement="stacked" type={{field.html_input_type}} id="{{field.html_id}}" min="{{field.html_min}}" max="{{field.html_max}}" step="{{field.html_step}}" placeholder="{{field.placeholder}}" required="{{field.required=='t'}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-input>
+        <ion-textarea *ngIf="field.html_input_type=='textarea'" rows="8" [autoGrow]="true" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" required="{{field.required=='t'}}" placeholder="{{field.placeholder}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value"></ion-textarea>
+        <ion-select *ngIf="field.html_input_type=='select'" label={{field.display_name}} labelPlacement="stacked" id="{{field.html_id}}" placeholder="{{field.placeholder}}" required="{{field.required=='t'}}" (ngModelChange)="fieldChange($event, field.field_name)" [(ngModel)]="field.value">
+          <ion-select-option *ngFor="let option of formDataService.getSelectOptions(field.field_name, field.lookup_table, this.fieldContainer)" value = {{option.value}}>
             {{option.name}}
           </ion-select-option>
         </ion-select>

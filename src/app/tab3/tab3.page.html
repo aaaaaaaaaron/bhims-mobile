@@ -19,15 +19,15 @@
     <ion-card-content>
       <ion-list>
         <app-field-container *ngFor="let fieldContainer of section.field_containers" [fieldContainer]="fieldContainer"></app-field-container>
-        <app-accordion-container *ngFor="let accordion of section.accordions" [accordion]="accordion" [display]="this.formService.displayAccordion(accordion, section)"></app-accordion-container>
+        <app-accordion-container *ngFor="let accordion of section.accordions" [accordion]="accordion" [display]="this.reportService.displayAccordion(accordion, section)"></app-accordion-container>
       </ion-list>
     </ion-card-content>    
   </ion-card>
 </ion-content>
 
-<ion-button expand="block" color="tertiary" (click)="reportService.logForm()">
+<!-- <ion-button expand="block" color="tertiary" (click)="reportService.logForm()">
   Save Form
-</ion-button>
+</ion-button> -->
 
 
 
