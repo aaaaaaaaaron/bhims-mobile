@@ -4,13 +4,17 @@
       <ion-icon [src]="icon" size="large"></ion-icon>
       BHIMS Report #{{reportService.reportIndex + 1}}
     </ion-title>
-    <ion-content>
-      HEHEH
-    </ion-content>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class = "background-image" [fullscreen]="true">
+
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">BHIMS Report #{{reportService.reportIndex + 1}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
 
   <ion-card *ngFor="let section of reportService.reports[reportService.reportIndex].sections" class = "section">
     <ion-card-header>

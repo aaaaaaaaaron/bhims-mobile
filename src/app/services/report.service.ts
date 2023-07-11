@@ -3,6 +3,10 @@ import { Accordion, Field, FieldContainer, FormService, Page, Section } from './
 import { FormDataService } from './form-data.service';
 const _ = require('lodash')
 import { Directory, Filesystem } from '@capacitor/filesystem';
+import { StorageService } from './storage.service';
+// import { IonicStorageModule } from '@ionic/storage-angular'
+import { Storage } from '@ionic/storage-angular'
+
 
 
 @Injectable({
@@ -13,9 +17,13 @@ export class ReportService {
   public reports: Page[]
   public reportIndex: number
 
-  // todo: move initializeMasterPage here to get rid of circular dependency
-  constructor(public formDataService: FormDataService) {
+  constructor(public formDataService: FormDataService, public storageService: StorageService) {
     
+    // if (await storageService.get('reports')) {
+    // }
+
+    //cant do awaits like above in a constructor. So I am thinking next commit I will try to have the component (tab 3)
+    // read from this.reports and initialize it or something.
     this.reports = [this.initializeMasterPage()]
 
     this.reportIndex = 0
@@ -152,10 +160,19 @@ export class ReportService {
     return masterPage
   }
 
+  // public logForm() {
+  //   console.log(this.reports[this.reportIndex])
+  // }
 
+  public async logReports() {
+    console.log("reports:")
+    console.log(await this.storageService.get('reports'))
+  }
 
-  public logForm() {
-    console.log(this.reports[this.reportIndex])
+  // the idea here is to save all of the reports. I might want to refactor to make it save reports individually I just want to
+  // see right now if I can get saving and loading to work.
+  public async saveReports() {
+    await this.storageService.set('reports', JSON.stringify(this.reports))
   }
 
   // the idea is to make it work with the valuesToSQL method in bhims-entry.js so we need (values, tableName, timestamp)
