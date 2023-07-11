@@ -16,7 +16,7 @@
   </ion-header>
 
 
-  <ion-card *ngFor="let section of reportService.reports[reportService.reportIndex].sections" class = "section">
+  <ion-card *ngFor="let section of this.reportService.currentPage.sections" class = "section">  
     <ion-card-header>
       <ion-card-title>{{section.section_title}}</ion-card-title>
     </ion-card-header>
@@ -29,9 +29,9 @@
   </ion-card>
 </ion-content>
 
-<!-- <ion-button expand="block" color="tertiary" (click)="reportService.logForm()">
+<ion-button expand="block" color="tertiary" (click)="reportService.saveReport()">
   Save Form
-</ion-button> -->
+</ion-button>
 
 
 

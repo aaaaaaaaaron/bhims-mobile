@@ -16,6 +16,7 @@ export class ReportService {
 
   public reports: Page[]
   public reportIndex: number
+  public currentPage: Page
 
   constructor(public formDataService: FormDataService, public storageService: StorageService) {
     
@@ -24,9 +25,10 @@ export class ReportService {
 
     //cant do awaits like above in a constructor. So I am thinking next commit I will try to have the component (tab 3)
     // read from this.reports and initialize it or something.
-    this.reports = [this.initializeMasterPage()]
-
-    this.reportIndex = 0
+    // this.reports = [this.initializeMasterPage()]
+    this.reports = []
+    this.reportIndex = -1 // initialize not selecting anything
+    this.currentPage = this.initializeMasterPage()
 
   }
 
@@ -43,9 +45,9 @@ export class ReportService {
     this.reports.push(this.initializeMasterPage())
   }
 
-  // todo: delete logic can change the selected form sneakily. Maybe build some logic to counter that.
+  // todo: add better UI for deleting report. Now its a bit cryptic.
   public deleteReport(index: number) {
-    if (this.reports.length > 1) {
+    if (this.reports.length > 1 && this.reportIndex != index) {
       this.reports.splice(index, 1)
       if (this.reportIndex > this.reports.length - 1) {
         this.reportIndex = this.reports.length - 1
@@ -53,9 +55,21 @@ export class ReportService {
     }
   }
 
+  // saves the currently opened report
+  public saveReport() {
+    if (this.reportIndex == -1) {
+      this.reports.push(_.cloneDeep(this.currentPage))
+      this.reportIndex = this.reports.length - 1 // the last report
+    } 
+    else {
+      this.reports[this.reportIndex] = _.cloneDeep(this.currentPage)
+    }
+  }
+
   public selectReport(index: number) {
     console.log("switching reports to report: " + (index + 1).toString())
     this.reportIndex = index
+    this.currentPage = _.cloneDeep(this.reports[index])
   }
 
   public displayAccordion(accordion: Accordion, section: Section): boolean {
@@ -160,10 +174,8 @@ export class ReportService {
     return masterPage
   }
 
-  // public logForm() {
-  //   console.log(this.reports[this.reportIndex])
-  // }
 
+  // todo: just build these into storageService
   public async logReports() {
     console.log("reports:")
     console.log(await this.storageService.get('reports'))
