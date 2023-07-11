@@ -4,7 +4,6 @@ import { FormDataService } from './form-data.service';
 const _ = require('lodash')
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { StorageService } from './storage.service';
-// import { IonicStorageModule } from '@ionic/storage-angular'
 import { Storage } from '@ionic/storage-angular'
 
 
@@ -28,7 +27,9 @@ export class ReportService {
     // this.reports = [this.initializeMasterPage()]
     this.reports = []
     this.reportIndex = -1 // initialize not selecting anything
-    this.currentPage = this.initializeMasterPage()
+    let newCurrentPage = this.initializeMasterPage()
+    this.addAllRequiredFilled(newCurrentPage)
+    this.currentPage = newCurrentPage
 
   }
 
@@ -69,7 +70,9 @@ export class ReportService {
   public selectReport(index: number) {
     console.log("switching reports to report: " + (index + 1).toString())
     this.reportIndex = index
-    this.currentPage = _.cloneDeep(this.reports[index])
+    let newCurrentPage = _.cloneDeep(this.reports[index])
+    this.addAllRequiredFilled(newCurrentPage)
+    this.currentPage = newCurrentPage
   }
 
   public displayAccordion(accordion: Accordion, section: Section): boolean {
@@ -119,11 +122,6 @@ export class ReportService {
       for (let fieldContainer of section.field_containers) {
         let field_containers_fields = this.formDataService.fields.filter(field => field.field_container_id == fieldContainer.id)
         fieldContainer.fields = _.cloneDeep(field_containers_fields)
-        fieldContainer.allRequiredFilled = () => {
-          return fieldContainer.fields.every((field: Field) => {
-            return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
-          })
-        }
       }
 
       // section's accordions
@@ -135,26 +133,7 @@ export class ReportService {
         for (let fieldContainer of accordion.fans[0]) { // only need to access the first/ only fan
           let field_containers_fields = this.formDataService.fields.filter(field => field.field_container_id == fieldContainer.id)
           fieldContainer.fields = _.cloneDeep(field_containers_fields)
-          fieldContainer.allRequiredFilled = () => {
-            return fieldContainer.fields.every((field: Field) => {
-              return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
-            })  
-          }
         }
-        accordion.allRequiredFilled = () => {
-          return accordion.fans.every((fan) => {
-            return fan.every((fieldContainer) => {
-              return fieldContainer.fields.every((field: Field) => {
-                return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
-              })            
-            })
-          })
-        }
-      }
-
-      section.allRequiredFilled = () => {
-        return section.field_containers.every((fieldContainer: FieldContainer) => fieldContainer.allRequiredFilled())
-        && section.accordions.every((accordion: Accordion) => accordion.allRequiredFilled())
       }
     }
 
@@ -165,20 +144,60 @@ export class ReportService {
       css_class: '',
       sections: sections,
       allRequiredFilled: () => {
-        return masterPage.sections.every((section) => {
-          return section.allRequiredFilled()
-        }
-      )}
+        return false
+      }
     }
+
+    // this.addAllRequiredFilled(masterPage)
 
     return masterPage
   }
 
+  // Deep cloning and saving does not like functions so we have to redeclare everytime.
+  // Todo: maybe move to a class based approach?
+  public addAllRequiredFilled(page: Page) {
+    page.sections.forEach((section) => {
+      section.field_containers.forEach((fieldContainer) => {
+        fieldContainer.allRequiredFilled = () => {
+          return fieldContainer.fields.every((field: Field) => {
+            return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
+          })  
+        }
+      })
+      section.accordions.forEach((accordion) => {
+        accordion.allRequiredFilled = () => {
+          return accordion.fans.every((fan) => {
+            return fan.every((fieldContainer) => {
+              return fieldContainer.fields.every((field: Field) => {
+                return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
+              })            
+            })
+          })
+        }        
+      })
+      section.allRequiredFilled = () => {
+        return section.field_containers.every((fieldContainer: FieldContainer) => fieldContainer.allRequiredFilled())
+        && section.accordions.every((accordion: Accordion) => accordion.allRequiredFilled())
+      }
+    })
+    page.allRequiredFilled = () => {
+      return page.sections.every((section) => {
+        return section.allRequiredFilled()
+      }
+    )}
+  }
+
 
   // todo: just build these into storageService
-  public async logReports() {
-    console.log("reports:")
-    console.log(await this.storageService.get('reports'))
+  public async loadReports() {
+    let reports: Page[] = JSON.parse(await this.storageService.get('reports'))
+    console.log(reports)
+
+    reports.forEach((report) => {
+      this.addAllRequiredFilled(report)
+    })
+
+    this.reports = reports
   }
 
   // the idea here is to save all of the reports. I might want to refactor to make it save reports individually I just want to

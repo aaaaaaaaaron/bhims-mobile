@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { ReportService } from '../services/report.service';
 
 @Component({
   selector: 'app-tab1',
@@ -9,5 +10,5 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule],
 })
 export class Tab1Page {
-  constructor() {}
+  constructor(reportService: ReportService) {}
 }
