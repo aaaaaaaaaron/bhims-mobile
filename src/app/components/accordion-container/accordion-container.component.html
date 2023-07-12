@@ -5,7 +5,7 @@
       <ion-icon name="trash-outline" (click)="deleteItem(i)"></ion-icon>
     </ion-item>
     <div class="ion-padding" slot="content">
-      <app-field-container *ngFor="let fieldContainer of fan" [fieldContainer]="fieldContainer"></app-field-container>
+      <app-field-container *ngFor="let fieldContainer of fan" [fieldContainer]="fieldContainer" [section]="section"></app-field-container>
     </div>
   </ion-accordion>
 </ion-accordion-group>

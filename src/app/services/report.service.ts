@@ -94,10 +94,16 @@ export class ReportService {
 
   // do not display if field depends on dropdown val == other
   // clear val of "other" if user changes it away from "other"
-  public displayField(field: Field, fieldContainer: FieldContainer) {
+  public displayField(field: Field, section: Section) {
+    if (field.calculation_target) { return false } //todo: implement this (unit conversions)
     if (field.dependent_target != null) {
       let dependent_field_name = field.dependent_target.substring(7) + "_code" // have to do some shifting to get field name
-      let dependent_field = fieldContainer.fields.find((field) => field.field_name == dependent_field_name) as Field // casting this might be dumb
+      let sectionsFields = section.field_containers.flatMap((fieldContainer)=>fieldContainer.fields)
+      let dependent_field = sectionsFields.find((field) => field.field_name == dependent_field_name) as Field // casting this might be dumb
+      if (dependent_field == undefined) {
+        dependent_field_name = field.dependent_target.substring(7)
+        dependent_field = sectionsFields.find((field) => field.field_name == dependent_field_name) as Field
+      } 
       if (field.dependent_value.split(',').includes(dependent_field?.value)) {
         return true;
       }
@@ -160,7 +166,7 @@ export class ReportService {
       section.field_containers.forEach((fieldContainer) => {
         fieldContainer.allRequiredFilled = () => {
           return fieldContainer.fields.every((field: Field) => {
-            return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
+            return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, section)
           })  
         }
       })
@@ -169,7 +175,7 @@ export class ReportService {
           return accordion.fans.every((fan) => {
             return fan.every((fieldContainer) => {
               return fieldContainer.fields.every((field: Field) => {
-                return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, fieldContainer)
+                return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, section)
               })            
             })
           })
@@ -188,10 +194,9 @@ export class ReportService {
   }
 
 
-  // todo: just build these into storageService
+  // todo: build these into storageService
   public async loadReports() {
     let reports: Page[] = JSON.parse(await this.storageService.get('reports'))
-    console.log(reports)
 
     reports.forEach((report) => {
       this.addAllRequiredFilled(report)
@@ -200,8 +205,6 @@ export class ReportService {
     this.reports = reports
   }
 
-  // the idea here is to save all of the reports. I might want to refactor to make it save reports individually I just want to
-  // see right now if I can get saving and loading to work.
   public async saveReports() {
     await this.storageService.set('reports', JSON.stringify(this.reports))
   }

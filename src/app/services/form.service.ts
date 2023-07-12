@@ -64,7 +64,7 @@ export interface Field {
   field_container_id: string
   on_change: string
   card_label_index: string
-  calculation_targer: string
+  calculation_target: string
   html_min: string
   html_max: string  
   html_step: string

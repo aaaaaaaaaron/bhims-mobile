@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FieldContainerComponent } from '../field-container/field-container.component';
 import { IonicModule } from '@ionic/angular';
 import { NgFor, NgIf } from '@angular/common';
-import { Accordion, FieldContainer } from 'src/app/services/form.service';
+import { Accordion, FieldContainer, Section } from 'src/app/services/form.service';
 const _ = require('lodash')
 
 
@@ -28,6 +28,7 @@ export class ReadableIndexPipe implements PipeTransform {
 })
 export class AccordionContainerComponent {
   @ Input() accordion!: Accordion
+  @ Input() section!: Section
   @ Input() display!: boolean
 
   constructor() { }
