@@ -42,8 +42,6 @@
   Save reports
 </ion-button>
 
-<ion-button expand="block" color="tertiary" (click)="reportService.loadReports()">
-  Load saved reports
+<ion-button expand="block" color="tertiary" (click)="writeToClipboard(reportService.exportReports())">
+  Copy Reports to Clipboard
 </ion-button>
-
-<ion-button expand="block" color="tertiary" (click)="writeToClipboard(reportService.exportReports())">Copy Reports to Clipboard</ion-button>

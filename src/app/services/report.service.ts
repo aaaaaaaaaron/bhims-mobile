@@ -19,12 +19,6 @@ export class ReportService {
 
   constructor(public formDataService: FormDataService, public storageService: StorageService) {
     
-    // if (await storageService.get('reports')) {
-    // }
-
-    //cant do awaits like above in a constructor. So I am thinking next commit I will try to have the component (tab 3)
-    // read from this.reports and initialize it or something.
-    // this.reports = [this.initializeMasterPage()]
     this.reports = []
     this.reportIndex = -1 // initialize not selecting anything
     let newCurrentPage = this.initializeMasterPage()
@@ -95,13 +89,14 @@ export class ReportService {
   // do not display if field depends on dropdown val == other
   // clear val of "other" if user changes it away from "other"
   public displayField(field: Field, section: Section) {
+    if (field.field_name?.includes('attachment')) { return false };
     if (field.calculation_target) { return false } //todo: implement this (unit conversions)
     if (field.dependent_target != null) {
-      let dependent_field_name = field.dependent_target.substring(7) + "_code" // have to do some shifting to get field name
+      let dependent_field_name = field.dependent_target.substring(7) + "_code" // shift to get field name
       let sectionsFields = section.field_containers.flatMap((fieldContainer)=>fieldContainer.fields)
-      let dependent_field = sectionsFields.find((field) => field.field_name == dependent_field_name) as Field // casting this might be dumb
+      let dependent_field = sectionsFields.find((field) => field.field_name == dependent_field_name) as Field
       if (dependent_field == undefined) {
-        dependent_field_name = field.dependent_target.substring(7)
+        dependent_field_name = field.dependent_target.substring(7) // some dependent targets don't include '_code'
         dependent_field = sectionsFields.find((field) => field.field_name == dependent_field_name) as Field
       } 
       if (field.dependent_value.split(',').includes(dependent_field?.value)) {
