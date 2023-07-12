@@ -67,6 +67,7 @@ export class ReportService {
     let newCurrentPage = _.cloneDeep(this.reports[index])
     this.addAllRequiredFilled(newCurrentPage)
     this.currentPage = newCurrentPage
+    console.log(this.currentPage)
   }
 
   public displayAccordion(accordion: Accordion, section: Section): boolean {
