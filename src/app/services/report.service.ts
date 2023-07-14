@@ -70,6 +70,23 @@ export class ReportService {
     console.log(this.currentPage)
   }
 
+  public createAlertButtons(index: number) {
+    return [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {},
+      },
+      {
+        text: 'OK',
+        role: 'confirm',
+        handler: () => {
+          this.selectReport(index)
+        },
+      },
+    ];
+  }
+
   public displayAccordion(accordion: Accordion, section: Section): boolean {
     if (accordion.dependent_target != null) {
       let dependent_field_name = accordion.dependent_target.substring(7)
