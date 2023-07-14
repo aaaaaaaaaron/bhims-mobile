@@ -23,8 +23,9 @@
       <!-- {{reportService.reportComplete(report)}} -->
     </ion-card-content>
     <ion-card-content>
-      <ion-button color = 'light' (click)="reportService.deleteReport(i)"><ion-icon name="trash-outline" size="large"></ion-icon></ion-button>
-      <ion-button color = 'light' (click)="reportService.selectReport(i)"><ion-icon name="arrow-forward-outline" size="large"></ion-icon></ion-button>
+      <ion-button color = 'light' (click)="reportService.deleteReport(i)"><ion-icon name="trash-outline" size="large"></ion-icon>delete</ion-button>
+      <ion-button color = 'light' (click)="reportService.selectReport(i)"><ion-icon name="arrow-forward-outline" size="large"></ion-icon>select</ion-button>
+      <ion-button color = 'light' (click)="writeToClipboard(reportService.exportReport(reportService.reports[i]))"><ion-icon name="arrow-up-outline" size="large"></ion-icon>copy to clipboard</ion-button>
     </ion-card-content>
   </ion-card>
 
@@ -43,5 +44,5 @@
 </ion-button>
 
 <ion-button expand="block" color="tertiary" (click)="writeToClipboard(reportService.exportReports())">
-  Copy Reports to Clipboard
+  Copy All Reports to Clipboard
 </ion-button>

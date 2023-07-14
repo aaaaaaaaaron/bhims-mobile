@@ -205,10 +205,52 @@ export class ReportService {
     await this.storageService.set('reports', JSON.stringify(this.reports))
   }
 
-  // the idea is to make it work with the valuesToSQL method in bhims-entry.js so we need (values, tableName, timestamp)
-  // We can get timestamp when we submit the form
-  // Group each field by table name.
-  public exportReports(): string {
-    return JSON.stringify(this.reports)
+  public exportReports() {
+    return this.reports.map(report => this.exportReport(report))
   }
+
+  // In bhims-form.js _this.fieldValues is a js object.
+  // Current plan is to export all of the  reports as a 
+  public exportReport(page: Page) {
+
+    // creates a js-like object
+    var report: {[k: string]: any} = {};
+    
+    page.sections.forEach(section => {
+      section.field_containers.forEach(fieldContainer => {
+        fieldContainer.fields.forEach(field => {
+          if (field.value) report[field.field_name] = field.value
+        });
+      })
+
+      section.accordions.forEach(accordion => {
+        var jsAccordion: any[] = []
+        accordion.fans.forEach(fan => {
+          var jsFan: {[k: string]: any} = {};
+          if (fan.some(fieldContainer=>fieldContainer.fields.some(field=>field.value))) {
+            fan.forEach(fieldContainer => {
+              fieldContainer.fields.forEach(field => {
+                jsFan[field.field_name] = field.value == undefined ? '' : field.value
+              })
+            })
+            jsAccordion.push(jsFan)
+          }
+        }) 
+        if (jsAccordion.length) report[accordion.table_name] = this.accordionArrayToObjectArray(jsAccordion)
+      })
+    });
+    // console.log(report)
+    // return JSON.stringify(report)
+    return report
+  }
+
+  // have to do conversion to get an array to look like it does in _this.fieldValues of bhims-form.js
+  private accordionArrayToObjectArray(accordion: any[]) {
+    var accordionObject: {[k: string]: any} = {};
+    accordion.forEach((fan, index) => {
+      accordionObject[index] = fan
+    })
+    return accordionObject
+  }
+
 }
