@@ -1,8 +1,9 @@
 <ion-accordion-group *ngIf="display">
   <ion-accordion *ngFor="let fan of this.accordion.fans; let i = index" value="{{i}}">
     <ion-item slot="header" color="light">
-      <ion-label>{{i + 1 | readableIndex}} {{accordion.item_name}}</ion-label>
-      <ion-icon name="trash-outline" (click)="deleteItem(i)"></ion-icon>
+      <ion-label *ngIf="!this.isLocked()">{{i + 1 | readableIndex}} {{accordion.item_name}}</ion-label>
+      <ion-label *ngIf="this.isLocked()">{{i == 0 ? "What was your initial reaction when you first observed the bear?" : "What was the bear's PRIMARY reaction to your presence?"}}</ion-label>
+      <ion-icon *ngIf="!this.isLocked()" name="trash-outline" (click)="deleteItem(i)"></ion-icon>
     </ion-item>
     <div class="ion-padding" slot="content">
       <app-field-container *ngFor="let fieldContainer of fan" [fieldContainer]="fieldContainer" [section]="section"></app-field-container>
@@ -10,5 +11,5 @@
   </ion-accordion>
 </ion-accordion-group>
 
-<ion-button *ngIf="display" (click)="addItem()" [disabled]="!this.accordion.allRequiredFilled()" [color]="this.accordion.allRequiredFilled() ? 'primary' : 'medium'">{{accordion.add_button_label}}</ion-button>
+<ion-button *ngIf="display && !this.isLocked()" (click)="addItem()" [disabled]="!this.accordion.allRequiredFilled()" [color]="this.accordion.allRequiredFilled() ? 'primary' : 'medium'">{{accordion.add_button_label}}</ion-button>
 

@@ -3,6 +3,7 @@ import { FieldContainerComponent } from '../field-container/field-container.comp
 import { IonicModule } from '@ionic/angular';
 import { NgFor, NgIf } from '@angular/common';
 import { Accordion, FieldContainer, Section } from 'src/app/services/form.service';
+import { ReportService } from 'src/app/services/report.service';
 const _ = require('lodash')
 
 
@@ -31,7 +32,7 @@ export class AccordionContainerComponent {
   @ Input() section!: Section
   @ Input() display!: boolean
 
-  constructor() { }
+  constructor(public reportService: ReportService) { }
 
   public addItem() {
     // todo add modal if can't add item
@@ -52,7 +53,10 @@ export class AccordionContainerComponent {
     }
   }
 
-
+  //todo: also move "display" logic in here w/ dependency injection
+  public isLocked() {
+    return this.reportService.onlyTwoReactions && this.accordion.table_name=="reactions"
+  }
 
 
 }

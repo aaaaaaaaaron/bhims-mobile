@@ -13,12 +13,14 @@ import { Storage } from '@ionic/storage-angular'
 })
 export class ReportService {
 
+  public onlyTwoReactions: boolean
   public reports: Page[]
   public reportIndex: number
   public currentPage: Page
 
   constructor(public formDataService: FormDataService, public storageService: StorageService) {
     
+    this.onlyTwoReactions = true // For DENA bhims we only have initial bear and initial human reactions
     this.reports = []
     this.reportIndex = -1 // initialize not selecting anything
     let newCurrentPage = this.initializeMasterPage()
@@ -95,8 +97,6 @@ export class ReportService {
         return true;
       }
       else {
-        // empty accordion (maybe reset values instead?)
-        // Will need to empty accordion on export if there is only 1 empty guy
         accordion.fans[0].forEach((fieldContainer) => fieldContainer.fields.forEach((field) => field.value = ''))
         return false
       }
@@ -107,8 +107,9 @@ export class ReportService {
   // do not display if field depends on dropdown val == other
   // clear val of "other" if user changes it away from "other"
   public displayField(field: Field, section: Section) {
-    if (field.field_name?.includes('attachment')) { return false };
-    if (field.calculation_target) { return false } //todo: implement this (unit conversions)
+    if (field.field_name?.includes('attachment'))  return false ;
+    if (field.calculation_target)  return false;  //todo: implement this (unit conversions)
+    if (field.field_name == "reaction_by" && this.onlyTwoReactions) return false;
     if (field.dependent_target != null) {
       let dependent_field_name = field.dependent_target.substring(7) + "_code" // shift to get field name
       let sectionsFields = section.field_containers.flatMap((fieldContainer)=>fieldContainer.fields)
@@ -167,9 +168,29 @@ export class ReportService {
       }
     }
 
+    if (this.onlyTwoReactions) this.addDefaultReactions(masterPage)
+
     // this.addAllRequiredFilled(masterPage)
 
     return masterPage
+  }
+
+  // if this.onlyTwoReactions, we need to add the two reaction accordions.
+  public addDefaultReactions(page: Page) {
+    const reactionsAccordion = page.sections
+      .find(section => section.section_title == "Interaction details")
+      ?.accordions.find(accordion => accordion.table_name == "reactions")
+    
+    reactionsAccordion?.fans.push(_.cloneDeep(reactionsAccordion.fans[0]))
+
+    reactionsAccordion!.fans[0][0].fields[0].value = "1"
+    reactionsAccordion!.fans[1][0].fields[0].value = "2"
+
+    reactionsAccordion!.fans[0][0].fields[1].display_name = "What did you/ another person do?"
+    reactionsAccordion!.fans[1][0].fields[1].display_name = "What did the bear do?"
+
+    reactionsAccordion!.fans[0][0].fields[1].placeholder = "What did you/ another person do?"
+    reactionsAccordion!.fans[1][0].fields[1].placeholder = "What did the bear do?"
   }
 
   // Deep cloning and saving does not like functions so we have to redeclare everytime.
@@ -236,7 +257,7 @@ export class ReportService {
     page.sections.forEach(section => {
       section.field_containers.forEach(fieldContainer => {
         fieldContainer.fields.forEach(field => {
-          if (field.value) report[field.field_name] = field.value
+          if (field.value) report[field.field_name] = field.value.replaceAll(`"`, "'")
         });
       })
 
