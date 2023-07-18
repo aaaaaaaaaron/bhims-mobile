@@ -104,13 +104,10 @@ export class ReportService {
     return true;
   }
 
-  // do not display if field depends on dropdown val == other
-  // clear val of "other" if user changes it away from "other"
   public displayField(field: Field, section: Section) {
     if (field.field_name?.includes('attachment'))  return false ;
-    if (field.calculation_target)  return false;  //todo: implement this (unit conversions)
     if (field.field_name == "reaction_by" && this.onlyTwoReactions) return false;
-    if (field.dependent_target != null) {
+    if (field.dependent_target) {
       let dependent_field_name = field.dependent_target.substring(7) + "_code" // shift to get field name
       let sectionsFields = section.field_containers.flatMap((fieldContainer)=>fieldContainer.fields)
       let dependent_field = sectionsFields.find((field) => field.field_name == dependent_field_name) as Field
@@ -126,6 +123,11 @@ export class ReportService {
         return false
       }
     }
+    if (field.calculation_target) {
+      return false; // units would be really annoying to implement because of how they are done on web app
+      //plan now is to disable here and make sure to set to 'm' on web app
+    }
+    if (!field.is_enabled) return false
     return true;
   }
 
@@ -200,7 +202,11 @@ export class ReportService {
       section.field_containers.forEach((fieldContainer) => {
         fieldContainer.allRequiredFilled = () => {
           return fieldContainer.fields.every((field: Field) => {
-            return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, section)
+            // return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, section)
+            if (field.required == 't' && this.displayField(field, section)) {
+              if (field.value == '' || field.value == undefined) return false
+            }
+            return true
           })  
         }
       })
@@ -209,8 +215,12 @@ export class ReportService {
           return accordion.fans.every((fan) => {
             return fan.every((fieldContainer) => {
               return fieldContainer.fields.every((field: Field) => {
-                return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, section)
-              })            
+                // return ((field.required == 't' && !(field.value == '' || field.value == undefined)) || field.required == 'f') || !this.displayField(field, section)
+                if (field.required == 't' && this.displayField(field, section) && this.displayAccordion(accordion, section)) {
+                  if (field.value == '' || field.value == undefined) return false
+                }
+                return true
+              })      
             })
           })
         }        
