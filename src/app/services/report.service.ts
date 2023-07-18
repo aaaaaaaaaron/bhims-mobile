@@ -105,6 +105,7 @@ export class ReportService {
   }
 
   public displayField(field: Field, section: Section) {
+    if (["place_name_code", "initial_distance_m"].includes(field.field_name)) return true; // this fields have weird dependent targets
     if (field.field_name?.includes('attachment'))  return false ;
     if (field.field_name == "reaction_by" && this.onlyTwoReactions) return false;
     if (field.dependent_target) {
