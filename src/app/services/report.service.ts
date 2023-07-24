@@ -105,9 +105,14 @@ export class ReportService {
   }
 
   public displayField(field: Field, section: Section) {
-    if (["place_name_code", "initial_distance_m"].includes(field.field_name)) return true; // this fields have weird dependent targets
+    if (["initial_distance_m", "location_type"].includes(field.field_name)) return true; // this fields have weird dependent targets
     if (field.field_name?.includes('attachment'))  return false ;
     if (field.field_name == "reaction_by" && this.onlyTwoReactions) return false;
+    if (["longitude", "latitude"].includes(field.field_name)) { // my logic here is a little different than forms so we don't have to deal with geo json
+      let sectionsFields = section.field_containers.flatMap((fieldContainer)=>fieldContainer.fields)
+      let dependent_field = sectionsFields.find((field) => field.field_name == "location_type") as Field
+      if (dependent_field!.value != "GPS coordinates") return false;
+    }
     if (field.dependent_target) {
       let dependent_field_name = field.dependent_target.substring(7) + "_code" // shift to get field name
       let sectionsFields = section.field_containers.flatMap((fieldContainer)=>fieldContainer.fields)

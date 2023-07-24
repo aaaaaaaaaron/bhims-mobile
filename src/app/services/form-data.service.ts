@@ -108,6 +108,8 @@ export class FormDataService {
     this.pages =  Object.values(JSON.parse(this.pages_))
     this.sections = Object.values(JSON.parse(this.sections_))
 
+    this.updateData()
+
     this.selectOptions = new Map([
       ["country_codes", JSON.parse(this.country_codes_)],
       ["human_group_type_codes", JSON.parse(this.human_group_type_codes_)],
@@ -152,13 +154,39 @@ export class FormDataService {
         {value: "yd", name: "yards"},
       ]
     }
-    if (field.field_name == 'reaction_code') {
+    else if (field.field_name == "location_type") {
+      return [
+        {value: "Place name", name: "Place name"},
+        {value: "GPS coordinates", name: "GPS coordinates"}
+      ]
+    }
+    else if (field.field_name == 'reaction_code') {
       const reactionBy = fieldContainer.fields.find((field)=>field.field_name=="reaction_by")?.value
       return this.selectOptions.get(field.field_name + 's_by_' + reactionBy)
     }
     else {
       return field.lookup_table == null ? this.selectOptions.get(field.field_name + 's') : this.selectOptions.get(field.lookup_table)
     }
+  }
+
+  // For some fields we may need to change manually.
+  // Try to minimize using this method, as to let most of the data come from the configuration.
+  // This will also break if the configuration does not have these specific fields 
+  public updateData() {
+    // Adds dollar sign to the value field of property damage
+    const valueField = this.fields.find(field => field.field_name=="property_value")
+    valueField!.display_name = valueField!.display_name + " ($)"
+    valueField!.placeholder = valueField!.placeholder + " ($)"
+
+    // change location_type field to a field container that exists (why does field container 18 not exist?)
+    const locationTypeField = this.fields.find(field => field.field_name=="location_type")
+    locationTypeField!.field_container_id = "19"
+    locationTypeField!.value = locationTypeField!.default_value
+
+    // this styles better for my ux
+    const placeNameField = this.fields.find(field => field.field_name=="place_name_code")
+    placeNameField!.field_container_id = "23"
+
   }
 
 }
