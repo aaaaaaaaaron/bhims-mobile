@@ -24,3 +24,18 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+
+.alert-wrapper {
+    overflow-wrap: break-word;
+    width: 85% !important;
+    max-width: 85% !important;
+}
+  
+.alert-radio-label {
+    white-space: normal !important;
+}
+
+.ion-select {
+    overflow-wrap: break-word;
+}
