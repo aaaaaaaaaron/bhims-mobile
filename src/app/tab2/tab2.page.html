@@ -23,7 +23,8 @@
     </ion-card-content>
     <ion-card-content>
       <ion-button color='light' [disabled]="reportService.reportIndex==i" (click)="reportService.deleteReport(i)"><ion-icon name="trash-outline" size="large"></ion-icon>delete</ion-button>
-      <ion-button color='light' id="select-report-{{i}}"><ion-icon name="arrow-forward-outline" size="large"></ion-icon>select</ion-button>
+      <ion-button color='light' [disabled]="reportService.reportIndex==i" id="select-report-{{i}}"><ion-icon name="arrow-forward-outline" size="large"></ion-icon>select</ion-button>
+      <br>
       <ion-button color='light' (click)="writeToClipboard(reportService.exportReport(reportService.reports[i]))"><ion-icon name="arrow-up-outline" size="large"></ion-icon>copy to clipboard</ion-button>
     </ion-card-content>
 
