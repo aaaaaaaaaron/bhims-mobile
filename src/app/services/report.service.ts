@@ -42,14 +42,16 @@ export class ReportService {
     this.reports.push(this.initializeMasterPage())
   }
 
-  // todo: add better UI for deleting report. Now its a bit cryptic.
+  // Deletes report and saves
   public deleteReport(index: number) {
     if (this.reports.length > 1 && this.reportIndex != index) {
       this.reports.splice(index, 1)
-      if (this.reportIndex > this.reports.length - 1) {
-        this.reportIndex = this.reports.length - 1
+      if (this.reportIndex > index) { // brings down selected report
+        this.reportIndex = this.reportIndex - 1
       }
     }
+
+    this.saveReports()
   }
 
   // saves the currently opened report (and saves all reports)
@@ -75,7 +77,7 @@ export class ReportService {
     console.log(this.currentPage)
   }
 
-  public createAlertButtons(index: number) {
+  public createSelectAlertButtons(index: number) {
     return [
       {
         text: 'Cancel',
@@ -87,6 +89,23 @@ export class ReportService {
         role: 'confirm',
         handler: () => {
           this.selectReport(index)
+        },
+      },
+    ];
+  }
+
+  public createDeleteAlertButtons(index: number) {
+    return [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {},
+      },
+      {
+        text: 'Delete',
+        role: 'confirm',
+        handler: () => {
+          this.deleteReport(index)
         },
       },
     ];

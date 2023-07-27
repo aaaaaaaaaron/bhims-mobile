@@ -22,7 +22,7 @@
       <b>Form complete:</b> {{report.allRequiredFilled()}} -->
     </ion-card-content>
     <ion-card-content>
-      <ion-button color='light' [disabled]="reportService.reportIndex==i" (click)="reportService.deleteReport(i)"><ion-icon name="trash-outline" size="large"></ion-icon>delete</ion-button>
+      <ion-button color='light' [disabled]="reportService.reportIndex==i" id="delete-report-{{i}}"><ion-icon name="trash-outline" size="large"></ion-icon>delete</ion-button>
       <ion-button color='light' [disabled]="reportService.reportIndex==i" id="select-report-{{i}}"><ion-icon name="arrow-forward-outline" size="large"></ion-icon>select</ion-button>
       <br>
       <ion-button color='light' (click)="writeToClipboard(reportService.exportReport(reportService.reports[i]))"><ion-icon name="arrow-up-outline" size="large"></ion-icon>copy to clipboard</ion-button>
@@ -32,8 +32,16 @@
       trigger="select-report-{{i}}"
       header="Progress may be unsaved!"
       message="Are you sure you want to continue?"
-      [buttons]="this.reportService.createAlertButtons(i)"
+      [buttons]="this.reportService.createSelectAlertButtons(i)"
     ></ion-alert>
+
+    <ion-alert
+      trigger="delete-report-{{i}}"
+      header="Warning!"
+      message="Are you sure you want to delete this report?"
+      [buttons]="this.reportService.createDeleteAlertButtons(i)"
+  ></ion-alert>
+
   </ion-card>
 
   <ion-card class = "section">
