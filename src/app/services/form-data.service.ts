@@ -187,6 +187,14 @@ export class FormDataService {
     const placeNameField = this.fields.find(field => field.field_name=="place_name_code")
     placeNameField!.field_container_id = "23"
 
+    // reorder improper reactions 
+    const reactedImproperlyField = this.fields.find(field => field.field_name=="reacted_improperly")
+    const improperReactionCode0Field = this.fields.find(field => field.field_name=="improper_reaction_code")
+    const improperReactionCode1Field = this.fields.find(field => field.field_name=="improper_reaction_code_1")
+    reactedImproperlyField!.field_container_id = "86"
+    improperReactionCode0Field!.field_container_id = "87"
+    improperReactionCode1Field!.field_container_id = "87"
+
   }
 
 }

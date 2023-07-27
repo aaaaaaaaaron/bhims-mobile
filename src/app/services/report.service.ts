@@ -52,7 +52,7 @@ export class ReportService {
     }
   }
 
-  // saves the currently opened report
+  // saves the currently opened report (and saves all reports)
   public saveReport() {
     if (this.reportIndex == -1) {
       this.reports.push(_.cloneDeep(this.currentPage))
@@ -61,6 +61,9 @@ export class ReportService {
     else {
       this.reports[this.reportIndex] = _.cloneDeep(this.currentPage)
     }
+
+    // this will save a lot of confusion
+    this.saveReports()
   }
 
   public selectReport(index: number) {
