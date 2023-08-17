@@ -19,8 +19,11 @@
     "target": "es2022",
     "module": "es2020",
     "lib": ["es2021", "dom"],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    // "resolveJsonModule": true,
+    // "allowSyntheticDefaultImports": true
   },
+  // "include": ["src/**/*.json"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
