@@ -281,13 +281,17 @@ export class ReportService {
     await this.storageService.set('reports', JSON.stringify(this.reports))
   }
 
-  public exportReports() {
-    return this.reports.map(report => this.exportReport(report))
+  public exportAllReports(): string {
+    let reportsString = ""
+    this.reports.forEach(report => {
+      reportsString += this.exportReport(report) + '\n\n'
+    })
+    return reportsString
   }
 
   // In bhims-form.js _this.fieldValues is a js object.
   // Current plan is to export all of the  reports as a 
-  public exportReport(page: Page) {
+  public exportReport(page: Page): string {
 
     // creates a js-like object
     var report: {[k: string]: any} = {};
@@ -315,9 +319,7 @@ export class ReportService {
         if (jsAccordion.length) report[accordion.table_name] = this.accordionArrayToObjectArray(jsAccordion)
       })
     });
-    // console.log(report)
-    // return JSON.stringify(report)
-    return report
+    return JSON.stringify(report)
   }
 
   // have to do conversion to get an array to look like it does in _this.fieldValues of bhims-form.js

@@ -24,9 +24,9 @@ export class Tab2Page implements OnInit {
     this.reportService.loadReports()
    }
 
-  public writeToClipboard = async (toWrite: any) => {
+  public writeToClipboard = async (toWrite: string) => {
     await Clipboard.write({
-      string: JSON.stringify(toWrite)
+      string: toWrite
     });
   };
 
